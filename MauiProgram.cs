@@ -4,6 +4,7 @@ using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 using EstadisticaApp.DataAcces;
 using EstadisticaApp.Utilities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace EstadisticaApp
@@ -18,8 +19,10 @@ namespace EstadisticaApp
             dbContext.Database.EnsureCreatedAsync().Wait();
             dbContext.Dispose();
             builder.Services.AddDbContext<DBContext>();
+            //Service title
+            builder.Services.AddScoped<ComponentEvents>();
 
-            
+
             builder
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>

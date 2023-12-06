@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using EstadisticaApp.Models
 @using Blazorise.Charts
+@using EstadisticaApp.Utilities
 @inherits CreateViewModel<VMRecUnidadGeneral>
 
 <Div  Class="row" Style="width:100vw;">
@@ -20,6 +21,8 @@
 
 
 @code {
+    [Inject]
+    protected ComponentEvents componentEvents{ set; get; }
     //Atributos
 
     public string textoP = string.Empty;
@@ -45,6 +48,7 @@
 
     async Task HandleRedraw()
     {
+        componentEvents.EventoState(this, new ServiceTitle { State = "Ingreso por Unidad Presupuestal" });//Titulo de Home, como parte de un estado
         await pieChart.Clear();
         //En esta parte podriamos hacer que se añada la acantidad
         object[] label = { "Sistema DIF", "Junta de Asistencia", "Hosítal del Niño", "CRIH", "Procuraduria" };

@@ -1,4 +1,8 @@
-﻿@inherits LayoutComponentBase
+﻿@using EstadisticaApp.Utilities
+
+@inherits LayoutComponentBase
+
+@implements IDisposable
 
 @inject NavigationManager Navigation
 
@@ -24,7 +28,8 @@
                
                  </Button>
              </BarBrand>
-             <Heading Size="HeadingSize.Is3" TextColor="TextColor.White" Class="mx-3">Ingreso por Unidades Presupuestales</Heading>
+             @*Ingreso por Unidades Presupuestales*@
+             <Heading Size="HeadingSize.Is3" TextColor="TextColor.White" Class="mx-3"> @title</Heading>
          </Bar>
      </LayoutHeader>
      <LayoutContent>
@@ -48,6 +53,25 @@
 </Layout>
 
 @code {
+    [Inject]
+    private ComponentEvents componentEvents{set;get;}
+    //Configuración de texto
+    public static string? title { set; get; }
+    
+    protected override void OnInitialized()
+    {
+        
+        componentEvents.Eventos += EventHandler;
+    }
+    public void EventHandler(object sender, ServiceTitle stateArguments)
+    {
+        title = stateArguments.State;
+        StateHasChanged();
+    }
+    public void Dispose()
+    {
+        componentEvents.Eventos -= EventHandler;
+    }
     private Offcanvas offcanvasRef;
 
     private Task ShowOffcanvas()
@@ -68,5 +92,6 @@
 
         return Task.CompletedTask;
     }
+    
 
 }

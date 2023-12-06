@@ -1,0 +1,97 @@
+﻿@*Se dara un argumento para hacer la consulta de  los meses por mes*@
+@page "/ingresos/{unidad}/{rubro}"
+@*El componente de Chart(Grafica) se tendra que crear un componente par sus uso con otras vistas*@
+@using Blazorise.Charts
+@using Blazorise.Charts.Trendline
+@*Vista modelo independeiente*@
+
+@inherits CreateViewModel<VMRecMesUnidad>
+
+<h3 class="m-1">Recaudo de Meses, de la Unidad: @unidad</h3>
+<Div Class="row" Style="width:100vw;">
+   
+    <Div Class="col-12 p-1">
+        <Chart @ref="chart" TItem="double?" Type="ChartType.Line" Class="px-2">
+            <ChartTrendline @ref="chartTrendline" TItem="double?" />
+        </Chart>
+        @*Body*@
+    </Div>
+
+    <Div Class="col-12 px-auto  d-flex justify-content-end p-0 m-0" Padding="Blazorise.Padding.Is3.FromTop">
+        @*Este bar sera un componente*@
+        <BarClasificacion />
+    </Div>
+
+</Div>
+
+
+@code {
+    Chart<double?> chart ;
+    ChartTrendline<double?> chartTrendline ;
+
+    [Parameter]
+    public string? rubro { set; get; }
+    [Parameter]
+    public string? unidad { set; get; }
+    //Toma los parametros para observarlos 
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        
+        return base.SetParametersAsync(parameters);
+    }
+    //Ejecuta un renderizado cada que recibe parametros nuevos
+    protected async override Task OnParametersSetAsync()
+    {
+        await ViewModel.datosPorRubro(rubro);
+        await HandleRedraw();
+        await base.OnParametersSetAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            await ViewModel.datosPorRubro(rubro);
+            await HandleRedraw();
+        }
+
+    }
+
+    async Task HandleRedraw()
+    {
+        if (chart != null){
+        await chart.Clear();
+        await chart.AddLabels(ViewModel.Meses);
+        await chart.AddDataSet(GetLineChartDataset());        
+            await chart.Update();
+        }
+    }
+
+    LineChartDataset<double?> GetLineChartDataset()
+    {
+        return new LineChartDataset<double?>
+            {
+                Label = "Recaudado Acumulado, por mes",
+                Data = GetsData(),
+                BackgroundColor = backgroundColors,
+                BorderColor = borderColors,
+                Fill = true,
+                PointRadius = 6,
+                BorderDash = new List<int> { }
+            };
+    }
+
+    string[]? Labels = { "Enero", "Febrero", "Enero", "Febrero", "Enero", "Febrero", };
+    List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
+    List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };
+
+    List<double?> GetsData()
+    {
+        List<double?> recaudoMes = new List<double?>();
+        foreach (var item in ViewModel.RecaudoMes)
+        {            
+            recaudoMes.Add(item.Recaudado);            
+        }        
+        return recaudoMes;
+    }
+}

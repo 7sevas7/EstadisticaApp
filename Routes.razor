@@ -1,0 +1,31 @@
+﻿<Blazorise.ThemeProvider Theme="@themeNew">
+<Router AppAssembly="@typeof(MauiProgram).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(Components.Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+</Router>
+
+</Blazorise.ThemeProvider>
+@code {
+    @*Configuracion  de colores *@
+    private Theme themeNew = new Theme
+        {
+            BackgroundOptions = new ThemeBackgroundOptions
+            {
+                Primary = "#a93e55",
+                Secondary = "#bc955a"
+            },
+            TextColorOptions = new ThemeTextColorOptions
+            {
+                Primary = "#bc955a"
+            },
+            BarOptions = new ThemeBarOptions
+            {
+                
+            }
+
+        };
+
+
+}

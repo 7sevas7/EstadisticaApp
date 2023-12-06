@@ -1,0 +1,88 @@
+﻿@page "/presupuesto"
+
+@using Blazorise.Charts
+@using Blazorise.Charts.Trendline
+@using EstadisticaApp.Models
+@inject NavigationManager Navigation
+
+
+
+<Div Class="row" Style="width:100vw;height:100%;">
+   
+    <Div Class="col-8" >
+        
+        @*Body*@
+    </Div>
+
+    <Div Class="col-4" Margin="Blazorise.Margin.Is3.FromTop" Style="overflow-y:auto;">
+        <div class="list-group">
+            <button type="button" class="list-group-item bg-primary p-2 disabled" aria-current="true">
+                <Icon Name="IconName.Filter" IconSize="IconSize.Large" Margin="Margin.Is1" TextColor="TextColor.White"/>
+            </button>
+
+            <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Oficinas Centrales/01"))">Sistema DIF</button>
+            <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Junta de Asistencia/02"))">Junta de Asistencia</button>
+            <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Hopital del Niño/03"))">Hospital Del Niño</button>
+            <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/CRIH/04"))">CRIH</button>
+            <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Procuraduría/05"))">
+                PROCURADURÍA
+            </button>
+        </div>
+        @*Este bar sera un componente
+        <BarClasificacion />*@
+    </Div>
+
+</Div>
+
+
+@*
+@code {
+
+        Chart<double?> chart;
+        ChartTrendline<double?> chartTrendline;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await HandleRedraw();
+        }
+    }
+    async Task HandleRedraw()
+    {
+        await chart.Clear();
+
+        await chart.AddLabels(ViewModel.Meses);
+        await chart.AddDataSet(GetLineChartDataset("Egreso_Imp_aprobado"));
+        await chart.AddDataSet(GetLineChartDataset("egreso_Imp_Ampliacion"));
+        await chart.AddDataSet(GetLineChartDataset("Egreso_Imp_Reduccion"));
+        await chart.AddDataSet(GetLineChartDataset("imp_Modificado"));
+        await chart.Update();
+
+
+    }
+    //Recibiria el tipo de egreso para crea el objeto para cada, suma de presupuesto
+    LineChartDataset<double?> GetLineChartDataset(string tipo)
+    {
+        return new LineChartDataset<double?>
+            {
+                Label = tipo,
+                Data = ViewModel.EgresoMes(tipo),
+                BackgroundColor = backgroundColors,
+                BorderColor = borderColors,
+                Fill = true,
+                PointRadius = 6,
+                BorderDash = new List<int> { }
+            };
+    }
+
+
+    List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
+    List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };
+
+
+
+    
+
+    
+} *@

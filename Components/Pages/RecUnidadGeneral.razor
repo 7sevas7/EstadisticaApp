@@ -1,0 +1,102 @@
+﻿@page "/"
+@using EstadisticaApp.Models
+@using Blazorise.Charts
+@inherits CreateViewModel<VMRecUnidadGeneral>
+
+<Div  Class="row" Style="width:100vw;">
+    <Div Class="d-sm-none d-sm-block col-md-3 col-lg-3"> </Div>
+
+    <Div Class="col-lg-5 col-md-5 col-sm-9 col-xs-9">
+        <PieChart @ref="pieChart" TItem="double" />
+        @*Body*@
+    </Div>
+
+    <Div Class="col-lg-4 col-md-4 col-sm-3 col-xs-3   d-flex justify-content-end p-1 m-0" Margin="Blazorise.Margin.Is3.FromTop" >
+        @*Este bar sera un componente*@
+        <BarClasificacion/>
+    </Div>
+
+</Div>
+
+
+@code {
+    //Atributos
+
+    public string textoP = string.Empty;
+
+
+    Dictionary<string, double> unidades;
+
+
+    PieChart<double> pieChart;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        if (firstRender)
+        {
+
+            await ViewModel.Gets();
+            unidades = await ViewModel.SumaUnidadesIngreso();//habra que modificar la consulta
+            //await ViewModel.Guardar();
+            await HandleRedraw();
+        }
+    }
+
+    async Task HandleRedraw()
+    {
+        await pieChart.Clear();
+        //En esta parte podriamos hacer que se añada la acantidad
+        object[] label = { "Sistema DIF", "Junta de Asistencia", "Hosítal del Niño", "CRIH", "Procuraduria" };
+        setColors(label.Length);
+        await pieChart.AddLabels(label);
+        await pieChart.AddDataSet(GetPieChartDataset());
+        await pieChart.Update();
+
+    }
+    List<string> colorBack = new List<string>();
+    List<string> colorBorder = new List<string>();
+
+    void setColors(int lenght)
+    {
+        string caracteres = "ABCDEF0123456789";
+        var segmento = new char[6];
+        var random = new Random();
+        for (int j = 0; j < lenght; j++)
+        {
+            for (int i = 0; i < segmento.Length; i++)
+            {
+                segmento[i] = caracteres[random.Next(caracteres.Length)];
+            }
+
+            var color = new String(segmento);
+            colorBack.Add("#" + color + "33");
+            colorBorder.Add("#" + color + "ff");
+        }
+
+
+    }
+
+    PieChartDataset<double> GetPieChartDataset()
+    {
+        
+        return new PieChartDataset<double>
+            {
+                Data = datosSet(),
+                BackgroundColor = colorBack,
+                BorderColor = colorBorder
+
+            };
+    }
+    private List<double> datosSet()
+    {
+        List<double> dataSet = new List<double>();
+        foreach (var item in unidades)
+        {
+            dataSet.Add(item.Value);
+        }
+
+        return dataSet;
+    }
+
+}

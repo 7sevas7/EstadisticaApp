@@ -1,0 +1,73 @@
+﻿@inherits LayoutComponentBase
+
+@inject NavigationManager Navigation
+
+
+<Offcanvas @ref="offcanvasRef" ShowBackdrop Placement="Blazorise.Placement.Start">
+     <OffcanvasHeader>
+         Offcanvas Start Titulo
+         <CloseButton Clicked="@HideOffcanvas" />
+     </OffcanvasHeader>
+     <OffcanvasBody>
+         Offcanvas Content
+     </OffcanvasBody>
+ </Offcanvas>
+
+ <Layout>
+     <LayoutHeader>
+         <Bar Breakpoint="Blazorise.Breakpoint.Desktop"
+              Background="Background.Primary"
+              ThemeContrast="ThemeContrast.Light">
+             <BarBrand>
+
+                 <Button Clicked="@ShowOffcanvas" TextColor="TextColor.Light">
+                     <Icon Name="@("fa-light fa-bars")"  />
+               
+                 </Button>
+             </BarBrand>
+             <Heading Size="HeadingSize.Is3" TextColor="TextColor.White" Class="mx-3">Ingreso por Unidades Presupuestales</Heading>
+         </Bar>
+     </LayoutHeader>
+     <LayoutContent>
+         @*Style="min-width:30vw;max-width:40vw;"*@
+         @Body
+    </LayoutContent>
+    <LayoutFooter Margin="Margin.Is3.FromStart">
+
+        <Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged" FullWidth="true">
+            <Items>
+                <Tab Clicked="@(()=>Navigation.NavigateTo("/"))" Name="Home">Ingreso por Unidades presupuestales </Tab>
+                <Tab Clicked="@(()=>Navigation.NavigateTo("/presupuesto"))" Name="Preupuesto">Egresos por Unidades presupuestales </Tab>
+                @*<Tab Clicked="@(()=>Navigation.NavigateTo("/"))" Name="profile">Mes</Tab>
+                <Tab Name="messages">Messages</Tab>
+                <Tab Name="settings">Settings</Tab>*@
+            </Items>
+
+        </Tabs>
+
+    </LayoutFooter>
+</Layout>
+
+@code {
+    private Offcanvas offcanvasRef;
+
+    private Task ShowOffcanvas()
+    {
+        return offcanvasRef.Show();
+    }
+
+    private Task HideOffcanvas()
+    {
+        return offcanvasRef.Hide();
+    }
+
+    string selectedTab = "Home";
+
+    private Task OnSelectedTabChanged(string name)
+    {
+        selectedTab = name;
+
+        return Task.CompletedTask;
+    }
+
+}

@@ -40,9 +40,9 @@
          @*Style="min-width:30vw;max-width:40vw;"*@
          @Body
     </LayoutContent>
-    <LayoutFooter Margin="Margin.Is3.FromStart">
+    <LayoutFooter Style="box-shadow: 0px -12px 11px -6px rgba(0,0,0,0.2);">
 
-        <Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged" FullWidth="true">
+        <Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged" FullWidth="true" Padding="Padding.Is0" Margin="Margin.Is0">
             <Items>
                 <Tab Clicked="@(()=>Navigation.NavigateTo("/"))" Name="Home">Ingreso por Unidades presupuestales </Tab>
                 <Tab Clicked="@(()=>Navigation.NavigateTo("/presupuesto"))" Name="Preupuesto">Egresos por Unidades presupuestales </Tab>

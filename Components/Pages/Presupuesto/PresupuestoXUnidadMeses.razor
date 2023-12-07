@@ -3,20 +3,21 @@
 @using Blazorise.Charts
 @using Blazorise.Charts.Trendline
 @using EstadisticaApp.Models
+
 @inject NavigationManager Navigation
 @inherits CreateViewModel<VMPresupuestosMain>
 
 <Div Class="row" Style="width:100vw;height:100%;">
    
-    <Div Class="col-8" >
-        <h4>Presupuesto por de Unidad, @unidad </h4>
+    <Div Class="col-10 pt-2 pe-2" >
+        <h4>Presupuesto de @unidad, por Mes </h4>
         <Chart @ref="chart" TItem="double?" Type="ChartType.Line" Padding="Padding.Is4">
             <ChartTrendline @ref="chartTrendline" TItem="double?" />
         </Chart>
         @*Body*@
     </Div>
 
-    <Div Class="col-4" Margin="Blazorise.Margin.Is3.FromTop" Style="overflow-y:auto;">
+    <Div Class="col-2" Margin="Blazorise.Margin.Is3.FromTop" Style="overflow-y:auto;">
         <div class="list-group">
             <button type="button" class="list-group-item bg-primary p-2 disabled" aria-current="true">
                 <Icon Name="IconName.Filter" IconSize="IconSize.Large" Margin="Margin.Is1" TextColor="TextColor.White"/>
@@ -26,7 +27,7 @@
             <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Hopital del Niño/03"))">Hospital Del Niño</button>
             <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/CRIH/04"))">CRIH</button>
             <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Procuraduría/05"))">
-                PROCURADURÍA
+                Procuraduría              
             </button>
         </div>        
     </Div>
@@ -37,7 +38,7 @@
 
     [Parameter]
     public string? unidad{ set; get; }
-    
+
     [Parameter]
     public string? rubro{ set; get; }
 
@@ -71,7 +72,7 @@
         if (chart != null) {
             await chart.Clear();
             await chart.AddLabels(ViewModel.Meses);
-           
+
             await chart.AddDataSet( GetLineChartDataset("imp_Modificado"));
             await chart.AddDataSet(GetLineChartDataset("Imp_Comp_Dev_Eje_Pagado"));
             await chart.Update();
@@ -83,7 +84,7 @@
     {
         return new LineChartDataset<double?>
             {
-                Label = tipo,
+                Label = TipoGasto(tipo),
                 Data =  ViewModel.EgresoMes(tipo),
                 BackgroundColor = backgroundColors,
                 BorderColor = borderColors,
@@ -91,6 +92,22 @@
                 PointRadius = 6,
                 BorderDash = new List<int> { }
             };
+    }
+
+    public string TipoGasto(string tipo)
+    {
+        switch (tipo)
+        {
+            case "imp_Modificado":
+                return "Modificado";
+            case "Imp_Comp_Dev_Eje_Pagado":
+                return "Pagado";
+            default:
+                return "--";
+        }
+
+    
+    
     }
 
     List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };

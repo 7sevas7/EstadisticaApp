@@ -1,9 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EstadisticaApp.ConfigViewModel.Config;
 using EstadisticaApp.DataAcces.Implement;
 using EstadisticaApp.Models;
-using System.Runtime.CompilerServices;
+
 
 namespace EstadisticaApp.ViewModels
 {
@@ -32,14 +33,9 @@ namespace EstadisticaApp.ViewModels
         {
             var MeSes = await presupuestos.Meses();
             Meses = MeSes.ToArray();
-            //await presupuestos.InserPrueba();
-            //ListaXmes = presupuestos.UnidadXMes;
-            ///Parametro  
-            //Esta funcion recibira el rubro que regresara acumlado anual,  en un objeto con cada tipo de Egreso
-            //PresupuestoAcumulado = await presupuestos.AcumuladoUnidad("01");
-            //ListaPresupuesto = await presupuestos.GetUnidadesPresupuesto();            
+            AcumladoUnidad();
+            
         }
-
         //Esta lista es la suma por mes de cada tipo de Egreso , Egreso_Imp_aprobado, egreso_Imp_Ampliacion etc, regresara de a cuerdo al tipo que se de como argumento
         //El argumento es el nombre de la columna, 
         public  List<double?> EgresoMes(string tipo)
@@ -54,6 +50,15 @@ namespace EstadisticaApp.ViewModels
             ListaXmes = presupuestos.UnidadXMes;
 
         }
+
+        [RelayCommand]
+        public async Task AcumladoUnidad()
+        {
+           ListaPresupuesto =  await presupuestos.AcumuladoUnidad();
+        }
+        //Lo podremos definir en un estado
+        
+
 
     }
 }

@@ -6,15 +6,23 @@
 @using EstadisticaApp.Models
 @using EstadisticaApp.Utilities
 
+@inherits CreateViewModel<VMPresupuestosMain>
 @inject NavigationManager Navigation
 
 
+@foreach (var item in ViewModel.ListaPresupuesto)
+{
+    <h2>@item.Cve_Rubro_Ingreso</h2>
+    <h2>@item.Imp_Comp_Dev_Eje_Pagado</h2>
+}
 
 <Div Class="row" Style="width:100vw;height:100%;">
    
     <Div Class="col-8" >
-        
-        @*Body*@
+        <h4>Presupuesto total por unidad</h4>
+        <Chart @ref="chart" TItem="double?" Type="ChartType.Line" Padding="Padding.Is4">
+            <ChartTrendline @ref="chartTrendline" TItem="double?" />
+        </Chart>
     </Div>
 
     <Div Class="col-4" Margin="Blazorise.Margin.Is3.FromTop" Style="overflow-y:auto;">
@@ -41,9 +49,56 @@
     [Inject]
     private ComponentEvents componentEvents{ set; get; }
 
+    private List<string> unidadestext = new();
+
     protected override void OnInitialized(){
         componentEvents.EventoState(this,new ServiceTitle{State = "Presupuesto por Unidad Presupuestal"});
+        componentEvents.Eventos += EventHandler;
+    }
+    public void EventHandler(object sender, ServiceTitle serviceArg)
+    {
+        unidadestext = serviceArg.TextUnidad;
+        StateHasChanged();    
+    }
+
+    Chart<double?> chart;
+    ChartTrendline<double?> chartTrendline;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            
+            await HandleRedraw();
+        }
+    }
+    async Task HandleRedraw()
+    {
+        if (chart != null)
+        {
+            await chart.Clear();
+            await chart.AddLabels();
+
+            await chart.AddDataSet();
+            
+            await chart.Update();
+        }
 
     }
-   
+    LineChartDataset<double?> GetLineChartDataset(string tipo)
+    {
+        return new LineChartDataset<double?>
+            {
+                Label = tipo,
+                Data = ViewModel.EgresoMes(tipo),
+                BackgroundColor = backgroundColors,
+                BorderColor = borderColors,
+                Fill = true,
+                PointRadius = 6,
+                BorderDash = new List<int> { }
+            };
+    }
+
+    List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
+    List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };
+
 }

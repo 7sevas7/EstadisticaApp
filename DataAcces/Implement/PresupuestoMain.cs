@@ -56,25 +56,32 @@ namespace EstadisticaApp.DataAcces.Implement
         }
 
         //Esta funcion se podran añadir todos los demas sumas de Presupuestos// Se definira mas adelante en otra grafica //Exactamente es solo un un egreso pero no se cual por el momento 
-        public async Task<UnidadesPresupuesto> AcumuladoUnidad(string rubro) {
+        public async Task<List<UnidadesPresupuesto>> AcumuladoUnidad() {
             //Sera con un for para su modificacion por cada unidad
             //Se añadira el mes más adelante 
+            List<UnidadesPresupuesto> acumulado = new();
+            foreach (var rubro in RubroList())
+            {
+
+            
             UnidadesPresupuesto? presupuestoAcumulado = await __context.UnidadesPresupuesto
                 .Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro)
                 .Select(pre => new UnidadesPresupuesto
                 {
-                    Cve_Rubro_Ingreso = pre.Cve_Rubro_Ingreso.Substring(2,2),
+                    Cve_Rubro_Ingreso = pre.Cve_Rubro_Ingreso.Substring(2, 2),
                     Num_Mes = pre.Num_Mes,
                     Egreso_Imp_aprobado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro).Sum(u => u.Egreso_Imp_aprobado),
                     egreso_Imp_Ampliacion = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro).Sum(u => u.egreso_Imp_Ampliacion),
                     Egreso_Imp_Reduccion = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro).Sum(u => u.Egreso_Imp_Reduccion),
-                    imp_Modificado =          __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro).Sum(u => u.imp_Modificado),
+                    imp_Modificado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro).Sum(u => u.imp_Modificado),
                     Imp_Comp_Dev_Eje_Pagado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro).Sum(u => u.Imp_Comp_Dev_Eje_Pagado)
 
                 })
                 .FirstOrDefaultAsync();//Añadir ciclo mes !!
+                acumulado.Add(presupuestoAcumulado);
 
-            return presupuestoAcumulado;
+        }
+            return acumulado;
         }
         //Lista que debuelve cada recaudo por unida, pero en cada objeto la suma de tal
         public async Task UnidadXMeses(string rubro)
@@ -131,8 +138,12 @@ namespace EstadisticaApp.DataAcces.Implement
             }
             return meses;
         }
+        //Simplemente para los subros he iterar 
+        public List<string> RubroList()
+        {
+            return new List<string> {"01","02","03","04","05"};
 
-
+        }
 
         private string idenMes(int? mesInt) {
             switch (mesInt) {

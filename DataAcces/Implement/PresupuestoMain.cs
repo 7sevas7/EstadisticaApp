@@ -23,17 +23,23 @@ namespace EstadisticaApp.DataAcces.Implement
         public async Task InsertPresupuestos (List<UnidadesPresupuesto> presupuestos)
         {
             var transaccion = await __context.Database.BeginTransactionAsync();
-            try
-            {
-                 
-                await __context.UnidadesPresupuesto.AddRangeAsync(presupuestos);
-                await __context.SaveChangesAsync();
-                await transaccion.CommitAsync();
-            }
-            catch (Exception ex) {
-                await transaccion.RollbackAsync();
-                Debug.WriteLine(ex.Message);
-            }
+           
+                
+                try
+                {
+                     await __context.UnidadesPresupuesto.AddRangeAsync(presupuestos);
+                    
+                    await __context.SaveChangesAsync();
+                    await transaccion.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaccion.RollbackAsync();
+                    Debug.WriteLine(ex.Message);
+                }
+            
+            
+           
         }
         public async Task<List<UnidadesPresupuesto>>? GetUnidadesPresupuesto()
         {
@@ -171,6 +177,17 @@ namespace EstadisticaApp.DataAcces.Implement
                     default:
                     return "--";
             }
+           
+        }
+        public async Task<List<double?>> AcumuladoIngresos()
+        {
+            List<double?> ret = new List<double?>();
+            foreach (var item in RubroList())
+            {
+                var suma = await __context.UnidadesIngreso.Where(u => u.Rubro == item).SumAsync(r => r.Recaudado);
+                ret.Add(suma);
+            }
+            return ret;
         }
 
 

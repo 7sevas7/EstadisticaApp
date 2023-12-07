@@ -9,15 +9,15 @@
 
 <Div Class="row" Style="width:100vw;height:100%;">
    
-    <Div Class="col-10 pt-2 pe-2" >
-        <h4>Presupuesto de @unidad, por Mes </h4>
-        <Chart @ref="chart" TItem="double?" Type="ChartType.Line" Padding="Padding.Is4">
+    <Div Class="col-lg-10 col-md-12 col-sm-12 col-xs-12 pt-2 pe-2 mb-3">
+        <h4 class="ms-2">Presupuesto de @unidad, por Mes </h4>
+        <Chart @ref="chart" TItem="double?" Type="ChartType.Line">
             <ChartTrendline @ref="chartTrendline" TItem="double?" />
         </Chart>
         @*Body*@
     </Div>
 
-    <Div Class="col-2" Margin="Blazorise.Margin.Is3.FromTop" Style="overflow-y:auto;">
+    <Div Class="col-lg-2 col-md-12 col-sm-12 col-xs-12 px-auto mb-3" Style="overflow-y:auto;margin-left:1rem;box-shadow: 0px -12px 11px -6px rgba(0,0,0,0.2);">
         <div class="list-group">
             <button type="button" class="list-group-item bg-primary p-2 disabled" aria-current="true">
                 <Icon Name="IconName.Filter" IconSize="IconSize.Large" Margin="Margin.Is1" TextColor="TextColor.White"/>
@@ -84,7 +84,7 @@
     {
         return new LineChartDataset<double?>
             {
-                Label = TipoGasto(tipo),
+                Label = ViewModel.TipoGasto(tipo),
                 Data =  ViewModel.EgresoMes(tipo),
                 BackgroundColor = backgroundColors,
                 BorderColor = borderColors,
@@ -94,21 +94,7 @@
             };
     }
 
-    public string TipoGasto(string tipo)
-    {
-        switch (tipo)
-        {
-            case "imp_Modificado":
-                return "Modificado";
-            case "Imp_Comp_Dev_Eje_Pagado":
-                return "Pagado";
-            default:
-                return "--";
-        }
-
     
-    
-    }
 
     List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
     List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };

@@ -1,5 +1,4 @@
-﻿using Blazorise;
-using EstadisticaApp.DataAcces.Interfaces;
+﻿using EstadisticaApp.DataAcces.Interfaces;
 using EstadisticaApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -62,8 +61,6 @@ namespace EstadisticaApp.DataAcces.Implement
             List<UnidadesPresupuesto> acumulado = new();
             foreach (var rubro in RubroList())
             {
-
-            
             UnidadesPresupuesto? presupuestoAcumulado = await __context.UnidadesPresupuesto
                 .Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro)
                 .Select(pre => new UnidadesPresupuesto
@@ -175,6 +172,7 @@ namespace EstadisticaApp.DataAcces.Implement
                     return "--";
             }
         }
-        
+
+
     }
 }

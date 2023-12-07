@@ -10,27 +10,22 @@
 @inject NavigationManager Navigation
 
 
-@foreach (var item in ViewModel.ListaPresupuesto)
-{
-    <h2>@item.Cve_Rubro_Ingreso</h2>
-    <h2>@item.Imp_Comp_Dev_Eje_Pagado</h2>
-}
+
 
 <Div Class="row" Style="width:100vw;height:100%;">
    
-    <Div Class="col-8" >
-        <h4>Presupuesto total por unidad</h4>
-        <Chart @ref="chart" TItem="double?" Type="ChartType.Line" Padding="Padding.Is4">
+    <Div Class="col-lg-10 col-md-12 col-sm-12 col-xs-12 pt-2 pe-2 mb-3" >
+        <h4>Presupuesto Acumulado por unidad</h4>
+        <Chart @ref="chart" TItem="double?" Type="ChartType.Line" >
             <ChartTrendline @ref="chartTrendline" TItem="double?" />
         </Chart>
     </Div>
 
-    <Div Class="col-4" Margin="Blazorise.Margin.Is3.FromTop" Style="overflow-y:auto;">
+    <Div Class="col-lg-2 col-md-12 col-sm-12 col-xs-12 px-auto mb-3" Style="overflow-y:auto;margin-left:1rem;box-shadow: 0px -12px 11px -6px rgba(0,0,0,0.2);">
         <div class="list-group">
             <button type="button" class="list-group-item bg-primary p-2 disabled" aria-current="true">
                 <Icon Name="IconName.Filter" IconSize="IconSize.Large" Margin="Margin.Is1" TextColor="TextColor.White"/>
             </button>
-
             <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Oficinas Centrales/01"))">Sistema DIF</button>
             <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Junta de Asistencia/02"))">Junta de Asistencia</button>
             <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Hopital del Niño/03"))">Hospital Del Niño</button>
@@ -76,10 +71,11 @@
         if (chart != null)
         {
             await chart.Clear();
-            await chart.AddLabels();
+            await chart.AddLabels(ViewModel.ListaUnidades);
 
-            await chart.AddDataSet();
-            
+            await chart.AddDataSet(GetLineChartDataset("imp_Modificado"));
+            await chart.AddDataSet(GetLineChartDataset("Imp_Comp_Dev_Eje_Pagado"));
+            await chart.AddDataSet(GetLineChartDataset("Egreso_Imp_aprobado"));
             await chart.Update();
         }
 
@@ -88,8 +84,8 @@
     {
         return new LineChartDataset<double?>
             {
-                Label = tipo,
-                Data = ViewModel.EgresoMes(tipo),
+                Label = ViewModel.TipoGasto(tipo),
+                Data = ViewModel.EgresoUnidadData(tipo),
                 BackgroundColor = backgroundColors,
                 BorderColor = borderColors,
                 Fill = true,

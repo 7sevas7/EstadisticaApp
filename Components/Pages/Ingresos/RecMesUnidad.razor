@@ -10,14 +10,14 @@
 <h3 class="m-1">Recaudo de Meses, de la Unidad: @unidad</h3>
 <Div Class="row" Style="width:100vw;">
    
-    <Div Class="col-12 p-1">
+    <Div Class="col-9 p-1">
         <Chart @ref="chart" TItem="double?" Type="ChartType.Line" Class="px-2">
             <ChartTrendline @ref="chartTrendline" TItem="double?" />
         </Chart>
         @*Body*@
     </Div>
 
-    <Div Class="col-12 px-auto  d-flex justify-content-end p-0 m-0" Padding="Blazorise.Padding.Is3.FromTop">
+    <Div Class="col-3 px-auto  d-flex justify-content-end p-0 m-0" Padding="Blazorise.Padding.Is3.FromTop">
         @*Este bar sera un componente*@
         <BarClasificacion />
     </Div>

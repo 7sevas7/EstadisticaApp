@@ -37,7 +37,7 @@ namespace EstadisticaApp.DataAcces.Implement
 
             }
             __context.SaveChanges();
-            Debug.Write("============>Listo");
+            Debug.Write("============>Listo!!!");
             Console.Write("============>Listo");
         }
         public async Task<List<UnidadesPresupuesto>>? GetUnidadesPresupuesto()
@@ -47,9 +47,8 @@ namespace EstadisticaApp.DataAcces.Implement
         }
 
         //Funcion de prueba para la insercion se datos 
-        public async Task InserPrueba()
-        {
-                                     
+        public async Task InserPruebaComment()
+        {                                     
             using var stream = await FileSystem.OpenAppPackageFileAsync("EgresosMes.json");
             using var reader = new StreamReader(stream);
             var ll = await reader.ReadToEndAsync();
@@ -59,6 +58,40 @@ namespace EstadisticaApp.DataAcces.Implement
             
         }
 
+        public async Task InserPrueba()
+        {
+            using var stream = await FileSystem.OpenAppPackageFileAsync("EgresosMes.json");
+            var serial = new JsonSerializer();
+            List<UnidadesPresupuesto> insert = new List<UnidadesPresupuesto>();
+            using (var reader = new StreamReader(stream))
+            using (var jsonReader = new JsonTextReader(reader))
+            {
+                while (jsonReader.Read()) {
+                    if (jsonReader.TokenType == JsonToken.StartObject) {
+                        var obj = serial.Deserialize<UnidadesPresupuesto>(jsonReader);
+                        insert.Add(obj);
+                        if (insert.Count == 100) {
+                            await __context.UnidadesPresupuesto.AddRangeAsync(insert);
+                            __context.SaveChanges();
+                            insert.Clear();
+                            __context.ChangeTracker.Clear();
+                        }
+                        
+                    }
+                }
+              
+            }
+
+            await __context.UnidadesPresupuesto.AddRangeAsync(insert);
+            __context.SaveChanges();
+            __context.ChangeTracker.Clear();
+
+            Debug.Write("============>Listo!!!>>>>>>>>>>>>");
+            Console.Write("============>Listo");
+
+        }
+
+        //
         //Esta funcion se podran añadir todos los demas sumas de Presupuestos// Se definira mas adelante en otra grafica //Exactamente es solo un un egreso pero no se cual por el momento 
         public async Task<List<UnidadesPresupuesto>> AcumuladoUnidad() {
             //Sera con un for para su modificacion por cada unidad

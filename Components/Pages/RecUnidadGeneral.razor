@@ -49,6 +49,7 @@
     async Task HandleRedraw()
     {
         componentEvents.EventoState(this, new ServiceTitle { State = "Ingreso por Unidad Presupuestal" });//Titulo de Home, como parte de un estado
+     if(pieChart != null){
         await pieChart.Clear();
         //En esta parte podriamos hacer que se añada la acantidad
         object[] label = { "Sistema DIF", "Junta de Asistencia", "Hosítal del Niño", "CRIH", "Procuraduria" };
@@ -56,7 +57,7 @@
         await pieChart.AddLabels(label);
         await pieChart.AddDataSet(GetPieChartDataset());
         await pieChart.Update();
-
+     }
     }
     List<string> colorBack = new List<string>();
     List<string> colorBorder = new List<string>();

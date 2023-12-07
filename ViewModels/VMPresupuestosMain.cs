@@ -33,7 +33,7 @@ namespace EstadisticaApp.ViewModels
         {
             var MeSes = await presupuestos.Meses();
             Meses = MeSes.ToArray();
-            AcumladoUnidad();
+            AcumuladoUnidad();
             
         }
         //Esta lista es la suma por mes de cada tipo de Egreso , Egreso_Imp_aprobado, egreso_Imp_Ampliacion etc, regresara de a cuerdo al tipo que se de como argumento
@@ -42,6 +42,7 @@ namespace EstadisticaApp.ViewModels
         {            
             return  ListaXmes.Select(u => (double?)typeof(UnidadesPresupuesto).GetProperty(tipo).GetValue(u)).ToList();            
         }
+       
 
         [RelayCommand]
         public async Task unidadMes(string rubro)
@@ -52,12 +53,36 @@ namespace EstadisticaApp.ViewModels
         }
 
         [RelayCommand]
-        public async Task AcumladoUnidad()
+        public async Task AcumuladoUnidad()
         {
            ListaPresupuesto =  await presupuestos.AcumuladoUnidad();
         }
         //Lo podremos definir en un estado
-        
+
+        //Suma de presupuestos de unidad
+        public List<double?> EgresoUnidadData(string tipo)
+        {
+            return ListaPresupuesto.Select(u => (double?)typeof(UnidadesPresupuesto).GetProperty(tipo).GetValue(u)).ToList();
+        }
+
+        public string[] ListaUnidades = new string[]{
+         "Sistema DIF","Junta de Asistencia","Hostipal de Niño","CRIH","Procuraduría"
+        };
+        public string TipoGasto(string tipo)
+        {
+            switch (tipo)
+            {
+                case "imp_Modificado":
+                    return "Modificado";
+                case "Imp_Comp_Dev_Eje_Pagado":
+                    return "Pagado";
+                case "Egreso_Imp_aprobado":
+                    return "Aprobado";
+                default:
+                    return "--";
+            }
+
+        }
 
 
     }

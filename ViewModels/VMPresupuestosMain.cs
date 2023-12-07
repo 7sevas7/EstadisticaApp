@@ -36,7 +36,7 @@ namespace EstadisticaApp.ViewModels
         {
 
            
-            await presupuestos.InserPrueba();
+          // await presupuestos.InserPrueba();
                
            
 

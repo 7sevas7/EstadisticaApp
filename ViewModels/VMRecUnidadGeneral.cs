@@ -31,6 +31,7 @@ namespace EstadisticaApp.Components.Pages
                 await __context.UnidadesIngreso.AddRangeAsync(DatosPruebas);
                 await __context.SaveChangesAsync();
                 //Posible error
+                Debug.Write("============>Listo!!!");
                 await Gets();
 
             }

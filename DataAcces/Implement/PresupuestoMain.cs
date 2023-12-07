@@ -22,24 +22,23 @@ namespace EstadisticaApp.DataAcces.Implement
         //Esta funcion los datos bentran desde al api que se generara 
         public async Task InsertPresupuestos (List<UnidadesPresupuesto> presupuestos)
         {
-            var transaccion = await __context.Database.BeginTransactionAsync();
-           
-                
-                try
-                {
-                     await __context.UnidadesPresupuesto.AddRangeAsync(presupuestos);
-                    
+            //var transaccion = await __context.Database.BeginTransactionAsync();
+            int i = 0;
+            foreach (var item in presupuestos)
+            {
+                __context.UnidadesPresupuesto.Add(item);
+
+                if (i ==100) {
                     await __context.SaveChangesAsync();
-                    await transaccion.CommitAsync();
+                    __context.ChangeTracker.Clear();
+                    i = 0;
                 }
-                catch (Exception ex)
-                {
-                    await transaccion.RollbackAsync();
-                    Debug.WriteLine(ex.Message);
-                }
-            
-            
-           
+                
+
+            }
+            __context.SaveChanges();
+            Debug.Write("============>Listo");
+            Console.Write("============>Listo");
         }
         public async Task<List<UnidadesPresupuesto>>? GetUnidadesPresupuesto()
         {

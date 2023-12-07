@@ -75,10 +75,12 @@
 
             await chart.AddDataSet( GetLineChartDataset("imp_Modificado"));
             await chart.AddDataSet(GetLineChartDataset("Imp_Comp_Dev_Eje_Pagado"));
+            
             await chart.Update();
         }
 
     }
+
     //Recibiria el tipo de egreso para crea el objeto para cada, suma de presupuesto
     LineChartDataset<double?> GetLineChartDataset(string tipo)
     {
@@ -94,7 +96,6 @@
             };
     }
 
-    
 
     List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
     List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };

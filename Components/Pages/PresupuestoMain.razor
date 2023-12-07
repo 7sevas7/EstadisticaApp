@@ -21,7 +21,7 @@
         </Chart>
     </Div>
 
-    <Div Class="col-lg-2 col-md-12 col-sm-12 col-xs-12 px-auto mb-3" Style="overflow-y:auto;margin-left:1rem;box-shadow: 0px -12px 11px -6px rgba(0,0,0,0.2);">
+    <Div Class="col-lg-2 col-md-12 col-sm-12 col-xs-12 px-auto my-3"  Style="overflow-y:auto;">
         <div class="list-group">
             <button type="button" class="list-group-item bg-primary p-2 disabled" aria-current="true">
                 <Icon Name="IconName.Filter" IconSize="IconSize.Large" Margin="Margin.Is1" TextColor="TextColor.White"/>
@@ -75,10 +75,24 @@
 
             await chart.AddDataSet(GetLineChartDataset("imp_Modificado"));
             await chart.AddDataSet(GetLineChartDataset("Imp_Comp_Dev_Eje_Pagado"));
-            await chart.AddDataSet(GetLineChartDataset("Egreso_Imp_aprobado"));
+            await chart.AddDataSet(GetLineChartDataAcumulado("Ingreso Acumulado"));
             await chart.Update();
         }
 
+    }
+    //Ingreso acumulado
+    LineChartDataset<double?> GetLineChartDataAcumulado(string tipo)
+    {
+        return new LineChartDataset<double?>
+            {
+                Label = tipo,
+                Data = ViewModel.AcumuladoIngresoUnidad,
+                BackgroundColor = backgroundColors,
+                BorderColor = borderColors,
+                Fill = true,
+                PointRadius = 6,
+                BorderDash = new List<int> { }
+            };
     }
     LineChartDataset<double?> GetLineChartDataset(string tipo)
     {

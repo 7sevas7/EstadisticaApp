@@ -2,6 +2,7 @@
 
 @using Blazorise.Charts
 @using Blazorise.Charts.Trendline
+@using EstadisticaApp.DataAcces.Implement
 @using EstadisticaApp.Models
 
 @inject NavigationManager Navigation
@@ -17,7 +18,7 @@
         @*Body*@
     </Div>
 
-    <Div Class="col-lg-2 col-md-12 col-sm-12 col-xs-12 px-auto mb-3" Style="overflow-y:auto;margin-left:1rem;box-shadow: 0px -12px 11px -6px rgba(0,0,0,0.2);">
+    <Div Class="col-lg-2 col-md-12 col-sm-12 col-xs-12 px-auto mb-3 mt-2" Style="overflow-y:auto;box-shadow: 0px -12px 11px -6px rgba(0,0,0,0.2);">
         <div class="list-group">
             <button type="button" class="list-group-item bg-primary p-2 disabled" aria-current="true">
                 <Icon Name="IconName.Filter" IconSize="IconSize.Large" Margin="Margin.Is1" TextColor="TextColor.White"/>
@@ -41,6 +42,8 @@
 
     [Parameter]
     public string? rubro{ set; get; }
+
+    private UnidadesMes recaudo = new UnidadesMes();
 
     Chart<double?> chart;
     ChartTrendline<double?> chartTrendline;
@@ -75,7 +78,11 @@
 
             await chart.AddDataSet( GetLineChartDataset("imp_Modificado"));
             await chart.AddDataSet(GetLineChartDataset("Imp_Comp_Dev_Eje_Pagado"));
-            
+
+            //Pide la clave de rubro
+            await chart.AddDataSet(await GetLineChartIngresos(rubro));
+
+
             await chart.Update();
         }
 
@@ -95,8 +102,25 @@
                 BorderDash = new List<int> { }
             };
     }
+    async Task<LineChartDataset<double?>> GetLineChartIngresos(string rubros)
+    {
+        return new LineChartDataset<double?>
+            {
+                Label = "Ingreso Acumulado",
+                Data = await IngresoAcumulado(rubros) ,
+                BackgroundColor = backgroundColors,
+                BorderColor = borderColors,
+                Fill = true,
+                PointRadius = 6,
+                BorderDash = new List<int> { }
+            };
+    }
 
-
+    public async Task<List<double?>> IngresoAcumulado(string rubross)
+    {
+        var lista = await recaudo.GetMesePorUnidad(rubross);
+        return lista.Select(u => u.Recaudado).ToList();
+    }
     List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
     List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };
 

@@ -84,10 +84,7 @@
         <PackageReference Include="Radzen.Blazor" Version="4.23.1" />
 <<<<<<< HEAD
 =======
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="DataAcces\Models\" />
+   
 >>>>>>> 546e6be661985e4f3cffbd7545f7dcc5a2eb5043
     </ItemGroup>
 

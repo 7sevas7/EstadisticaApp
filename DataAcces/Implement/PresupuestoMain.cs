@@ -1,8 +1,10 @@
 ﻿using EstadisticaApp.DataAcces.Interfaces;
 using EstadisticaApp.Models;
+using EstadisticaApp.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Linq.Dynamic.Core;
 
 
 namespace EstadisticaApp.DataAcces.Implement
@@ -11,33 +13,36 @@ namespace EstadisticaApp.DataAcces.Implement
     {
 
         private DBContext __context;
+        
 
         public List<UnidadesPresupuesto> UnidadXMes { set; get; }
 
         public PresupuestoMain()
         {
             __context = new DBContext();
+            
         }
         //Recordemos que entodo esta parte podria ri la implementacion de la memeoria cache 
         //Esta funcion los datos bentran desde al api que se generara 
-        public async Task InsertPresupuestos (List<UnidadesPresupuesto> presupuestos)
+        public async Task InsertPresupuestos (List<UnidadesPresupuesto>? presupuestos)
         {
-            //var transaccion = await __context.Database.BeginTransactionAsync();
-            int i = 0;
+            List<UnidadesPresupuesto> listaInstert = new();
             foreach (var item in presupuestos)
             {
-                __context.UnidadesPresupuesto.Add(item);
-
-                if (i ==100) {
+                listaInstert.Add(item);
+                if (listaInstert.Count == 300) {
+                    await __context.UnidadesPresupuesto.AddRangeAsync(listaInstert);
                     await __context.SaveChangesAsync();
+                    listaInstert.Clear();
                     __context.ChangeTracker.Clear();
-                    i = 0;
                 }
-                
-
             }
-            __context.SaveChanges();
-            Debug.Write("============>Listo!!!");
+            await __context.UnidadesPresupuesto.AddRangeAsync(listaInstert);
+            await __context.SaveChangesAsync();
+            listaInstert.Clear();
+            __context.ChangeTracker.Clear();
+
+            Debug.Write("============>Listo!!!>>>>>>>>>>>>");
             Console.Write("============>Listo");
         }
         public async Task<List<UnidadesPresupuesto>>? GetUnidadesPresupuesto()
@@ -86,8 +91,6 @@ namespace EstadisticaApp.DataAcces.Implement
             __context.SaveChanges();
             __context.ChangeTracker.Clear();
 
-            Debug.Write("============>Listo!!!>>>>>>>>>>>>");
-            Console.Write("============>Listo");
 
         }
 
@@ -151,8 +154,6 @@ namespace EstadisticaApp.DataAcces.Implement
               })
               .FirstOrDefaultAsync();//Añadir ciclo mes !!
             var count = __context.UnidadesPresupuesto.Count();
-            Debug.WriteLine("=================>>>>>>>>>>>"+count);
-
             return presupuestoMes;
         }
         private async Task<List<int?>> MesesN()
@@ -163,7 +164,7 @@ namespace EstadisticaApp.DataAcces.Implement
             return listaM;
         }
        
-        public async  Task<List<string>> Meses()
+        public async Task<string[]> Meses()
         {
             List<string> meses = new();
             var mesesN = await MesesN();
@@ -171,7 +172,7 @@ namespace EstadisticaApp.DataAcces.Implement
             foreach (var mes in ordenado) {
                 meses.Add(idenMes(mes));   
             }
-            return meses;
+            return meses.ToArray();
         }
         //Simplemente para los subros he iterar 
         public List<string> RubroList()
@@ -179,7 +180,8 @@ namespace EstadisticaApp.DataAcces.Implement
             return new List<string> {"01","02","03","04","05"};
 
         }
-
+        
+        
         private string idenMes(int? mesInt) {
             switch (mesInt) {
                 case 1:
@@ -222,6 +224,7 @@ namespace EstadisticaApp.DataAcces.Implement
             return ret;
         }
 
-
+        //Verificación si la tabla esta vacia 
+        public bool BoolCount() => __context.UnidadesPresupuesto.Count() > 0 ? false : true;
     }
 }

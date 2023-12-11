@@ -1,6 +1,7 @@
 ﻿using EstadisticaApp.DataAcces.Implement;
 using EstadisticaApp.Models;
 using EstadisticaApp.Utilities;
+
 using System.Diagnostics;
 
 
@@ -20,31 +21,35 @@ namespace EstadisticaApp.Controllers
 
         }
         public async Task verificarCount() {
+            Stopwatch timeMeasure = new Stopwatch();
+         
+                var count = presupuestoMain.BoolCount();
 
-            var count = presupuestoMain.BoolCount();
-
-            var presupuestoApi = await GetPresupuestoApi();
-            if (!count) {
-                Debug.Write("Guardandoww============>>>>>>>>");
+            timeMeasure.Start();
+            if (count)
+            {
+                List<UnidadesPresupuesto>? listOfApi = await apiRes.GetsListPresupuesto();
+                Debug.Write("guardandoww============>>>>>>>>");
                 try
                 {
-                    Debug.Write("Guardando============>>>>>>>>");
-                    await presupuestoMain.InsertPresupuestos(presupuestoApi);                    
-                    await Task.CompletedTask;
+                    Debug.Write("guardando============>>>>>>>>");
+                    await presupuestoMain.InsertPresupuestos(listOfApi);
+                    
                 }
                 catch (Exception ex)
                 {
 
                     throw new Exception(ex.ToString());
                 }
-              
+
             }
-          
-          
+            timeMeasure.Stop();
+            Debug.WriteLine("Guardar Datos==>>" + timeMeasure.Elapsed.TotalSeconds);
+
 
 
         }
-        public async Task<List<UnidadesPresupuesto>?> GetPresupuestoApi()=> await apiRes.GetsListPresupuesto();
+
 
     }
 

@@ -42,14 +42,15 @@ namespace EstadisticaApp.ViewModels
 
         public override async Task Loaded()
         {
-            control.verificarCount().Wait();
+            await control.verificarCount();
 
             if (!presupuestos.BoolCount()) {
+                Debug.Write("Se ejecuta en blazor =============****************");
                 Meses = await presupuestos.Meses();
                 AcumuladoIngresoUnidad = await presupuestos.AcumuladoIngresos();
                 //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
                 ListaPresupuesto = await presupuestos.AcumuladoUnidad();
-
+                Observerender = !presupuestos.BoolCount();
             }
 
         

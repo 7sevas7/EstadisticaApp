@@ -26,7 +26,7 @@ namespace EstadisticaApp.Utilities
                 Debug.WriteLine("Datos de Api Pre");
                 HttpResponseMessage res = await httpClient.GetAsync("api/Egresos");
                 
-                    Debug.WriteLine("Datos de Api Post");
+                    
                     string respuesta = await res.Content.ReadAsStringAsync();
                     Debug.WriteLine(respuesta);
                     lista = JsonConvert.DeserializeObject<List<UnidadesPresupuesto>>(respuesta);

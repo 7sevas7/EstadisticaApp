@@ -1,1 +1,2 @@
 # EstadisticaApp
+En la carpeta controller administrara la vista que se mostrara para el usuario, administrara la parte del api que se guardara en la base de datos local, hacerlo mejor de esa manera ya que ponerlo dentro de la clase que estan todos los metodos que esta la base de datos sería demaciado grande es por eso que se piensa hacer de la siguiente manera 

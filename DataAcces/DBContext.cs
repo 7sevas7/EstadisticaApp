@@ -8,11 +8,15 @@ namespace EstadisticaApp.DataAcces
     {
         public DbSet<UnidadesIngresos> UnidadesIngreso { set; get; }
         public DbSet<UnidadesPresupuesto>  UnidadesPresupuesto { set; get; }
-        
 
+        public DBContext():base()
+        {
+                
+        }
         //Parte de la contiguración de Entity
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            
             string conexion = $"Filename={ConexionDBDevice.Ruta("SIEB.db")}";
             optionsBuilder.UseSqlite(conexion);
 

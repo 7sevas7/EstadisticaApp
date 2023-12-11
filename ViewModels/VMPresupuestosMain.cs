@@ -2,8 +2,10 @@
 using CommunityToolkit.Mvvm.Input;
 
 using EstadisticaApp.ConfigViewModel.Config;
+using EstadisticaApp.Controllers;
 using EstadisticaApp.DataAcces.Implement;
 using EstadisticaApp.Models;
+using System.Diagnostics;
 
 
 namespace EstadisticaApp.ViewModels
@@ -12,6 +14,8 @@ namespace EstadisticaApp.ViewModels
     {
 
        PresupuestoMain presupuestos = new PresupuestoMain();
+        //Control de Api 
+        ControlApiDBPresupuesto control = new ControlApiDBPresupuesto();
 
         //Sera un objeto el cual cuente con todas las sumas para la visualización de la grafica 
         [ObservableProperty]
@@ -32,22 +36,23 @@ namespace EstadisticaApp.ViewModels
 
         [ObservableProperty]
         public List<double?> acumuladoIngresoUnidad = new();
+      
+        [ObservableProperty]
+        public bool observerender = false;
+
         public override async Task Loaded()
         {
+            control.verificarCount().Wait();
 
-           
-          // await presupuestos.InserPrueba();
-               
-           
+            if (!presupuestos.BoolCount()) {
+                Meses = await presupuestos.Meses();
+                AcumuladoIngresoUnidad = await presupuestos.AcumuladoIngresos();
+                //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
+                ListaPresupuesto = await presupuestos.AcumuladoUnidad();
 
-            var MeSes = await presupuestos.Meses();
-            Meses = MeSes.ToArray();
-            
-            AcumuladoIngresoUnidad = await presupuestos.AcumuladoIngresos();
-            AcumuladoUnidad();
-            //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
-            ListaPresupuesto = await presupuestos.AcumuladoUnidad();
-            
+            }
+
+        
         }
         //Esta lista es la suma por mes de cada tipo de Egreso , Egreso_Imp_aprobado, egreso_Imp_Ampliacion etc, regresara de a cuerdo al tipo que se de como argumento
         //El argumento es el nombre de la columna, 
@@ -95,7 +100,8 @@ namespace EstadisticaApp.ViewModels
             }
 
         }
-
+        
+      
 
     }
 }

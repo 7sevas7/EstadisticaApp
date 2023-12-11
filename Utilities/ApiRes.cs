@@ -1,4 +1,4 @@
-﻿using EstadisticaApp.Models;
+using EstadisticaApp.Models;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using System.Diagnostics;

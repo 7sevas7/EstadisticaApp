@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace EstadisticaApp.Utilities
 {
-    [Route("")]
+    
     public class ApiRes
     {
 

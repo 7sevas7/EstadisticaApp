@@ -5,16 +5,48 @@
 @using EstadisticaApp.DataAcces.Implement
 @using EstadisticaApp.Models
 
+@using Radzen.Blazor
+
 @inject NavigationManager Navigation
 @inherits CreateViewModel<VMPresupuestosMain>
 
 <Div Class="row" Style="width:100vw;height:100%;">
    
     <Div Class="col-lg-10 col-md-12 col-sm-12 col-xs-12 pt-2 pe-2 mb-3">
+      
         <h4 class="ms-2">Presupuesto de @unidad, por Mes </h4>
         <Chart @ref="chart" TItem="double?" Type="ChartType.Line">
             <ChartTrendline @ref="chartTrendline" TItem="double?" />
         </Chart>
+
+        @*Prubas de Manometro*@
+
+        <div class="container d-flex w-100  justify-content-center  align-items-baseline">
+
+            <div class="col-sm-12 col-lg-8 my-3 my-lg-5">
+                <RadzenArcGauge Style="width: 100%; height: 250px;">
+                    <RadzenArcGaugeScale Step="10" Min="0" Max="1000000" MinorStep="0" Radius="1.1" TickPosition=@tickPosition Y="0.55  " Margin="0">
+                        <RadzenArcGaugeScaleValue Value=@value ShowValue=@showValue>
+                            <Template Context="pointer">
+                                <h3>$@pointer.Value </h3>
+                                <h6 style="color:#e91e63;">
+                                    
+                                    $@pointer.Value Gas
+                                   </h6>
+                                <h6 style="color:#e0e0e0">$@pointer.Value <sup>.00</sup></h6>
+                            </Template>
+                        </RadzenArcGaugeScaleValue>
+                    </RadzenArcGaugeScale>
+                </RadzenArcGauge>
+
+            </div>
+
+        </div>
+        @*Tabla vizualizacion*@
+
+
+
+        @*///en¨Prueba*@
         @*Body*@
     </Div>
 
@@ -30,7 +62,9 @@
             <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Procuraduría/05"))">
                 Procuraduría              
             </button>
-        </div>        
+        </div>    
+        
+
     </Div>
 
 </Div>
@@ -124,4 +158,13 @@
     List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
     List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };
 
+
+    bool showValue = true;
+    double value = 5000.2800;
+    IEnumerable<GaugeTickPosition> tickPositions = Enum.GetValues(typeof(GaugeTickPosition)).Cast<GaugeTickPosition>();
+    GaugeTickPosition tickPosition = GaugeTickPosition.None;
 } 
+
+
+
+

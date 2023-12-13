@@ -9,14 +9,12 @@
 @inherits CreateViewModel<VMPresupuestosMain>
 @inject NavigationManager Navigation
 
-<h2>Petición</h2>
-
 
 <Button Color="Color.Primary" Outline>
     
     <Icon Name="IconName.SyncAlt" TextColor="TextColor.Dark" IconSize="IconSize.Large" />
 </Button>
-@if (ViewModel.Observerender)
+@if (!ViewModel.Observerender)
 {
     <Div Class="row" Style="width:100vw;height:100%;">
 
@@ -75,7 +73,7 @@
     async Task HandleRedraw()
     {
 
-        if (chart != null && ViewModel.Observerender == true)
+        if (chart != null && !ViewModel.Observerender)
         {
             await chart.Clear();
             await chart.AddLabels(ViewModel.ListaUnidades);

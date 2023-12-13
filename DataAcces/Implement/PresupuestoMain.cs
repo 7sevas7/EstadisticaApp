@@ -43,7 +43,7 @@ namespace EstadisticaApp.DataAcces.Implement
             __context.ChangeTracker.Clear();
 
             Debug.Write("============>Listo!!!>>>>>>>>>>>>");
-            Console.Write("============>Listo");
+            
         }
         public async Task<List<UnidadesPresupuesto>>? GetUnidadesPresupuesto()
         {

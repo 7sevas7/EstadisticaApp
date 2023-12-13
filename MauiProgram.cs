@@ -6,6 +6,7 @@ using EstadisticaApp.DataAcces;
 using EstadisticaApp.Utilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Radzen;
 
 namespace EstadisticaApp
 {
@@ -37,12 +38,16 @@ namespace EstadisticaApp
             //View Model
             builder.Services.AddViewModel();
             builder.Services.AddMauiBlazorWebView();
+            //Radzen
+            builder.Services.AddRadzenComponents();
+
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
 
+            builder.Services.AddSingleton<ApiRes>();
             return builder.Build();
         }
     }

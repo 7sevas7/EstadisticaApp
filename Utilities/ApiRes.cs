@@ -10,7 +10,7 @@ namespace EstadisticaApp.Utilities
     {
 
         HttpClient httpClient;
-        string baseUrl;
+        
 
         public ApiRes()
         {

@@ -22,13 +22,13 @@ namespace EstadisticaApp.ViewModels
         public UnidadesPresupuesto presupuestoAcumulado;
 
         [ObservableProperty]
-        public List<UnidadesPresupuesto>? listaXmes = new();
+        public List<UnidadesPresupuesto?> listaXmes = new();
 
         [ObservableProperty]
         public string? mensaje;
 
         [ObservableProperty]
-        public List<UnidadesPresupuesto>? listaPresupuesto = new();
+        public List<UnidadesPresupuesto?> listaPresupuesto = new();
 
         //Meses letras 
         [ObservableProperty]
@@ -42,14 +42,20 @@ namespace EstadisticaApp.ViewModels
 
         public override async Task Loaded()
         {
+            //Para correjir errores
             await control.verificarCount();
 
+            Observerender = presupuestos.BoolCount();
             if (!presupuestos.BoolCount()) {
-                Meses = await presupuestos.Meses();
+                
+            //    Meses = await presupuestos.Meses();
+                
                 AcumuladoIngresoUnidad = await presupuestos.AcumuladoIngresos();
-                //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
-                ListaPresupuesto = await presupuestos.AcumuladoUnidad();
+            //    //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
+               ListaPresupuesto = await presupuestos.AcumuladoUnidad();
             }
+          
+           
 
         
         }
@@ -99,8 +105,14 @@ namespace EstadisticaApp.ViewModels
             }
 
         }
-        
-      
+
+        //Se borraran los dato, para evitar información con mala consistencia 
+        public async Task ClearTable() {
+            Debug.WriteLine("Se borra");
+            await presupuestos.ClearTable();
+        }
+
+
 
     }
 }

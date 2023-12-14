@@ -20,6 +20,7 @@ namespace EstadisticaApp.Controllers
 
 
         }
+<<<<<<< HEAD
         public async Task verificarCount() {
             Stopwatch timeMeasure = new Stopwatch();
          
@@ -38,9 +39,37 @@ namespace EstadisticaApp.Controllers
                 }
                 catch (Exception ex)
                 {
+=======
+        public async Task verificarCount()
+        {
+            Debug.WriteLine( "<<<<<<<<<<<<<<<<<<<<");
+            Stopwatch timeMeasure = new Stopwatch();
 
-                    throw new Exception(ex.ToString());
+            var count = presupuestoMain.BoolCount();
+            string[] rubros = { "01","02","03","04","05"};
+            
+            if (count)
+            {
+                foreach (var item in rubros){                
+                
+                timeMeasure.Start();                
+                    Debug.WriteLine("Entra A la petición");
+                    try
+                    {
+                        var presupuestoApi = await apiRes.GetsListPresupuesto(item);
+                        Debug.WriteLine("Contador>>"+presupuestoApi.Count);
+                        await presupuestoMain.InsertPresupuestos(presupuestoApi);
+
+                        await Task.CompletedTask;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.ToString());
+                    }
+>>>>>>> PruebasIngreso
+
                 }
+<<<<<<< HEAD
 
             }
             timeMeasure.Stop();
@@ -50,6 +79,14 @@ namespace EstadisticaApp.Controllers
 
         }
 
+=======
+                timeMeasure.Stop();
+                Debug.WriteLine(timeMeasure.Elapsed.TotalSeconds+"<<<<=Secgundos");
+            }
+
+        }
+        
+>>>>>>> PruebasIngreso
 
     }
 

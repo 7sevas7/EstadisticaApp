@@ -1,0 +1,151 @@
+﻿@using EstadisticaApp.Models
+@using Radzen
+@using Radzen.Blazor
+
+@using Microsoft.EntityFrameworkCore
+
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-lg-6 offset-lg-3 my-5">
+
+            <RadzenChart>
+                <RadzenDonutSeries Data="@revenue" CategoryProperty="Quarter" ValueProperty="Revenue" TotalAngle="180" StartAngle="180">
+                    <ChildContent>
+                        <RadzenSeriesDataLabels Visible="true" />
+                    </ChildContent>
+                    <TitleTemplate>
+                        <div class="rz-donut-content">
+                            <div>$</div>
+                        </div>
+                    </TitleTemplate>
+                </RadzenDonutSeries>
+            </RadzenChart>
+        </div>
+    </div>
+</div>
+
+
+@*Listas*@                                       
+<RadzenDataList AllowVirtualization="@allowVirtual" WrapItems="@(!allowVirtual)" AllowPaging="@(!allowVirtual)" IsLoading="@isLoading" LoadData="@LoadData"
+                Data="@UnidadesPresupuestos" Count="@count" TItem="UnidadesPresupuesto" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+    <Template Context="UnidadesPresupuestos">
+        <RadzenCard Style="width: 100%; padding: 0;">
+        <RadzenRow Gap="0">
+            @*Elementos*@
+                        @*Primer Columna*@
+                <RadzenColumn Size="12" SizeLG="2" Class="rz-p-4 product-title">
+                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="rz-color-white" >@(UnidadesPresupuestos.Cve_Rubro_Ingreso)</RadzenText>
+                </RadzenColumn>
+                @*Segunda Columna*@
+                <RadzenColumn Size="12" SizeLG="8" Class="rz-p-4">
+                    <RadzenRow Gap="1">
+                        <RadzenColumn Size="12" SizeMD="3" SizeLG="3">
+                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Modificado</RadzenText>
+                            
+                            <RadzenBadge BadgeStyle="BadgeStyle.Primary" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.imp_Modificado)}") />
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="3" SizeLG="3">
+                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Ingresos(Desde la tabla ingresos)</RadzenText>
+                            <RadzenBadge BadgeStyle="BadgeStyle.Success" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.Egreso_Imp_aprobado)}") />
+                            
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="3" SizeLG="3">
+                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Gastado</RadzenText>
+                            
+                            <RadzenBadge BadgeStyle="BadgeStyle.Light" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.Imp_Comp_Dev_Eje_Pagado)}") />
+                        </RadzenColumn>
+
+        
+                    </RadzenRow>
+                </RadzenColumn>
+                @*Tercer Columna*@
+                <RadzenColumn Size="12" SizeLG="2" Class="rz-p-4">
+                    <RadzenButton Text="Order now" Style="width: 100%" />
+                </RadzenColumn>
+                   
+                
+                    
+        </RadzenRow>
+
+        </RadzenCard>
+    </Template>
+
+</RadzenDataList>
+
+
+
+<style>
+.product-title {
+    min-height: 72px;
+        background-color: #a93e55;
+        color:white;
+}
+.price-badge {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 20px;
+    padding: 8px;
+}
+</style>
+
+@code {
+    bool allowVirtual;
+    bool isLoading;
+    //Nuemero de elementos
+    int count;
+    //Lista enumerada
+    IEnumerable<UnidadesPresupuesto> UnidadesPresupuestos;
+    async Task LoadData()
+    {
+        List<UnidadesPresupuesto> listas = new List<UnidadesPresupuesto>
+        {
+            new UnidadesPresupuesto{Cve_Rubro_Ingreso = "020",imp_Modificado= 20000020, Imp_Comp_Dev_Eje_Pagado = 100, Egreso_Imp_aprobado = 1000},
+            new UnidadesPresupuesto{Cve_Rubro_Ingreso = "020",imp_Modificado= 20000020, Imp_Comp_Dev_Eje_Pagado = 100, Egreso_Imp_aprobado = 1000},
+            new UnidadesPresupuesto{Cve_Rubro_Ingreso = "020",imp_Modificado= 20000020, Imp_Comp_Dev_Eje_Pagado = 100, Egreso_Imp_aprobado = 1000}
+        };
+        UnidadesPresupuestos = listas as IEnumerable<UnidadesPresupuesto>;
+        count = listas.Count;
+        isLoading = false;
+
+
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+            await LoadData();
+        }
+    }
+
+}
+
+
+ 
+
+@code {
+    
+    bool showDataLabels = false;
+
+    class DataItem
+    {
+        public string Quarter { get; set; }
+        public double Revenue { get; set; }
+    }
+
+    DataItem[] revenue = new DataItem[] {
+    new DataItem
+    {
+    Quarter = "Gastado",
+    Revenue = 300000
+    },
+    new DataItem
+    {
+    Quarter = "Modificado",
+    Revenue = 100000
+    },
+    };
+} 

@@ -22,7 +22,7 @@ namespace EstadisticaApp.DataAcces.Implement
 
         }
         //Generara problemas sobre todo si aun no se toma en cuanta el año            
-        public async Task<List<UnidadesIngresos>>? GetMesePorUnidad(string rubro)
+        public async Task<List<UnidadesIngresos>> GetMesePorUnidad(string rubro)
         {
             List<UnidadesIngresos> listaXMes = new List<UnidadesIngresos>();
             var meses = await Meses();

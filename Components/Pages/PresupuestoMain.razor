@@ -13,15 +13,8 @@
 
 @inject DialogService DialogService
 
-<div class="rz-p-12 rz-text-align-center">
-    
-    <RadzenButton Text="Busy Dialog with markup" ButtonStyle="ButtonStyle.Secondary" Click="@((arg) => ShowBusyDialog())" />
-</div>
 
-<Button Color="Color.Primary" Outline>
-    
-    <Icon Name="IconName.SyncAlt" TextColor="TextColor.Dark" IconSize="IconSize.Large" Clicked="@((rr)=>ShowBusyDialog())"/>
-</Button>
+
 @if (!ViewModel.Observerender)
 {
     <Div Class="row" Style="width:100vw;height:100%;">
@@ -31,9 +24,14 @@
             <Chart @ref="chart" TItem="double?" Type="ChartType.Line" >
                 <ChartTrendline @ref="chartTrendline" TItem="double?" />
             </Chart>
+            <Donut/>
         </Div>
 
         <Div Class="col-lg-2 col-md-12 col-sm-12 col-xs-12 px-auto my-3 "  Style="overflow-y:auto;">
+            <Button Color="Color.Primary" Outline Clicked="@((rr)=>ShowDialogUpdateTable())">
+                <Icon Name="IconName.SyncAlt" TextColor="TextColor.Dark" IconSize="IconSize.Large"  />
+                    <p>14/12/2023(Ultima Actualización)</p>
+            </Button>
             <div class="list-group">
                 <button type="button" class="list-group-item bg-primary p-2 disabled" aria-current="true">
                     <Icon Name="IconName.Filter" IconSize="IconSize.Large" Margin="Margin.Is1" TextColor="TextColor.White"/>
@@ -47,10 +45,12 @@
                 </button>
             </div>
 
-
         </Div>
-
-    </Div>
+ </Div>
+}
+else
+{
+    <h1>Carga</h1>
 }
 @code{
     [Inject]
@@ -58,6 +58,8 @@
 
     private List<string> unidadestext = new();
 
+    //Estados
+    public string EstateLoader { set; get; }
     protected override void OnInitialized(){
         componentEvents.EventoState(this,new ServiceTitle{State = "Presupuesto por Unidad Presupuestal"});
         componentEvents.Eventos += EventHandler;
@@ -78,6 +80,7 @@
             await HandleRedraw();
         }
     }
+
     async Task HandleRedraw()
     {
 
@@ -124,30 +127,31 @@
     List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
     List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };
 
+    
 
+    async Task ShowDialogUpdateTable(){
 
-    async Task ShowBusyDialog(){
-        
-         InvokeAsync(async () =>{
-            // Simulate background task
-            await Task.Delay(2000);
+        InvokeAsync(async()=> {
+            //Borrando la base datos para despues actualizar 
+            EstateLoader = "Borrando datos locales....";
+            await ViewModel.ClearTable();
+            EstateLoader = "Cargando Nuevos Datos....";
+            await ViewModel.Loaded();
 
-        // Close the dialog
         DialogService.Close();
-    });
+        });
 
-        
-            await BusyDialog();
-        
+        BusyDialog();
+
+
     }
 
     // Busy dialog from markup
-    async Task BusyDialog()
+    void BusyDialog()
     {
-        await DialogService.OpenAsync("", ds =>
-    @<RadzenStack AlignItems="AlignItems.Center" Gap="2rem" Class="rz-p-12">
-        <RadzenImage Path="images/community.svg" Style="width: 200px;" AlternateText="community" />
-        <RadzenText TextStyle="TextStyle.H6">Loading, please wait...</RadzenText>
+         DialogService.Open("", ds =>
+    @<RadzenStack AlignItems="AlignItems.Center" Gap="2rem" Class="rz-p-12 rounded">
+        <RadzenText TextStyle="TextStyle.DisplayH6"> @EstateLoader</RadzenText>
         <div class="loader"></div>
     </RadzenStack>, new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto", CloseDialogOnEsc = false });
     }
@@ -159,7 +163,7 @@
     <style>
         
 .loader {
-  width: 40px;
+  width: 60%;
   aspect-ratio: 1;
   color: #f03355;
   position: relative;

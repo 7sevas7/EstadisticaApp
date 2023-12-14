@@ -20,7 +20,7 @@
     <Div Class="row" Style="width:100vw;height:100%;">
 
         <Div Class="col-lg-10 col-md-12 col-sm-12 col-xs-12 pt-2 pe-2 mb-3" >
-            <h4>Presupuesto Acumulado por unidad</h4>
+            <h4>Recaudo Acumulado por unidad</h4>
             <Chart @ref="chart" TItem="double?" Type="ChartType.Line" >
                 <ChartTrendline @ref="chartTrendline" TItem="double?" />
             </Chart>
@@ -40,8 +40,8 @@
                 <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Junta de Asistencia/02"))">Junta de Asistencia</button>
                 <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Hopital del Niño/03"))">Hospital Del Niño</button>
                 <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/CRIH/04"))">CRIH</button>
-                <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Procuraduría/05"))">
-                    PROCURADURÍA
+                <button type="button" class="list-group-item list-group-item-action" onclick="@(()=>Navigation.NavigateTo("/presupuesto/Procuraduría/05"))">                    
+                    Procuraduría
                 </button>
             </div>
 

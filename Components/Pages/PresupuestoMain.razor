@@ -11,15 +11,15 @@
 @inherits CreateViewModel<VMPresupuestosMain>
 @inject NavigationManager Navigation
 
-<<<<<<< HEAD
+
 @if (ViewModel.Observerender)
-=======
+
 @inject DialogService DialogService
 
 
 
 @if (!ViewModel.Observerender)
->>>>>>> PruebasIngreso
+
 {
     <Div Class="row" Style="width:100vw;height:100%;">
 
@@ -32,16 +32,16 @@
         </Div>
 
         <Div Class="col-lg-2 col-md-12 col-sm-12 col-xs-12 px-auto my-3 "  Style="overflow-y:auto;">
-<<<<<<< HEAD
+
             <Button Color="Color.Primary" Outline Class="mx-auto mb-1">
              <Icon Name="IconName.SyncAlt" TextColor="TextColor.Dark" IconSize="IconSize.Large" />
          </Button>
-=======
+
             <Button Color="Color.Primary" Outline Clicked="@((rr)=>ShowDialogUpdateTable())">
                 <Icon Name="IconName.SyncAlt" TextColor="TextColor.Dark" IconSize="IconSize.Large"  />
                     <p>14/12/2023(Ultima Actualización)</p>
             </Button>
->>>>>>> PruebasIngreso
+
             <div class="list-group">
                 <button type="button" class="list-group-item bg-primary p-2 disabled" aria-current="true">
                     <Icon Name="IconName.Filter" IconSize="IconSize.Large" Margin="Margin.Is1" TextColor="TextColor.White"/>
@@ -54,18 +54,16 @@
                     Procuraduría
                 </button>
             </div>
-<<<<<<< HEAD
-        </Div>
-    </Div>
-=======
 
         </Div>
- </Div>
+    </Div>
+
+
 }
 else
 {
     <h1>Carga</h1>
->>>>>>> PruebasIngreso
+
 }
 @code{
 

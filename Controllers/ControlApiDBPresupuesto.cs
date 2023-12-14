@@ -26,6 +26,7 @@ namespace EstadisticaApp.Controllers
 
             var count = presupuestoMain.BoolCount();
             string[] rubros = { "01","02","03","04","05"};
+            
             if (count)
             {
                 foreach (var item in rubros){                

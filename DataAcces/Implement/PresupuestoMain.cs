@@ -62,7 +62,7 @@ namespace EstadisticaApp.DataAcces.Implement
             
             
         }
-
+        //Solo datos de prueba
         public async Task InserPrueba()
         {
             using var stream = await FileSystem.OpenAppPackageFileAsync("EgresosMes.json");
@@ -163,7 +163,7 @@ namespace EstadisticaApp.DataAcces.Implement
             
             return listaM;
         }
-       
+       //Para organizar la lista de meses
         public async Task<string[]> Meses()
         {
             List<string> meses = new();
@@ -213,6 +213,7 @@ namespace EstadisticaApp.DataAcces.Implement
             }
            
         }
+        //Simplemente es la suma para diferenciar con los ingresados
         public async Task<List<double?>> AcumuladoIngresos()
         {
             List<double?> ret = new List<double?>();
@@ -223,7 +224,9 @@ namespace EstadisticaApp.DataAcces.Implement
             }
             return ret;
         }
-
+        public async Task ClearTable() {
+            await __context.UnidadesPresupuesto.ExecuteDeleteAsync();
+        }
         //Verificación si la tabla esta vacia 
         public bool BoolCount() => __context.UnidadesPresupuesto.Count() > 0 ? false : true;
     }

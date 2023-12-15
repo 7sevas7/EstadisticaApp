@@ -3,6 +3,7 @@
 @using Blazorise.Charts
 @using Blazorise.Charts.Trendline
 @using EstadisticaApp.Components.Layout
+
 @using EstadisticaApp.Models
 @using EstadisticaApp.Utilities
 @using EstadisticaApp.Components.components
@@ -25,6 +26,7 @@
             <Chart @ref="chart" TItem="double?" Type="ChartType.Line" >
                 <ChartTrendline @ref="chartTrendline" TItem="double?" />
             </Chart>
+            
             <Donut/>
         </Div>
 
@@ -49,10 +51,12 @@
         </Div>
  </Div>
 }
+
 else
 {
     <h1>Carga</h1>
 }
+
 @code{
     [Inject]
     private ComponentEvents componentEvents{ set; get; }
@@ -72,6 +76,7 @@ else
     }
 
     Chart<double?> chart;
+
     ChartTrendline<double?> chartTrendline;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -132,17 +137,19 @@ else
 
     async Task ShowDialogUpdateTable(){
 
-        InvokeAsync(async()=> {
-            //Borrando la base datos para despues actualizar 
+
+        BusyDialog();
+
+        //Borrando la base datos para despues actualizar 
             EstateLoader = "Borrando datos locales....";
             await ViewModel.ClearTable();
             EstateLoader = "Cargando Nuevos Datos....";
             await ViewModel.Loaded();
 
         DialogService.Close();
-        });
+        
 
-        BusyDialog();
+        
 
 
     }

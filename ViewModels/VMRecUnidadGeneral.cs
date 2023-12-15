@@ -2,7 +2,8 @@
 using System.Diagnostics;
 using EstadisticaApp.ConfigViewModel.Config;
 using CommunityToolkit.Mvvm.Input;
-using EstadisticaApp.DataAcces.Implement;
+
+using EstadisticaApp.Controllers;
 
 
 namespace EstadisticaApp.Components.Pages
@@ -10,44 +11,44 @@ namespace EstadisticaApp.Components.Pages
     public partial class VMRecUnidadGeneral : VMBase
     {
 
+        ControlApiDBIngreso<UnidadesIngresos> controlApiDBIngreso = new ControlApiDBIngreso<UnidadesIngresos>();
 
-        
-        private readonly ConsultaGeneral<UnidadesIngresos> __context = new();
         public string Mensaje { set; get; }
         public List<UnidadesIngresos>? UnidadesIngreso = new List<UnidadesIngresos>();
-
-      
 
         [RelayCommand]
         public async Task<List<UnidadesIngresos>> Gets()
         {
-            return await __context.Get();
+            return await controlApiDBIngreso.Getss();
             
         }
-
-        public async Task Guardar()
-        {
-            var DatosPruebas = DatosPrueba.Unidades();
-            try
-            {
-                await __context.Insert(DatosPruebas);                
-                //Posible error                
-                await Gets();
-
+        public async Task Reload() {
+            Debug.WriteLine("Se recarga");
+            await controlApiDBIngreso.ClearTable();
+            
+            await controlApiDBIngreso.VerificarData();            
+            var vacio = controlApiDBIngreso.BoolCount;
+            
+            if (vacio) {
+                Debug.WriteLine("Correcto");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine(ex.Message);
-                Debug.WriteLine(ex.Message);
+                Debug.WriteLine("No crrectt");
             }
-            Mensaje = "Se logro";
+
+            
+           
+        
+        
         }
 
         [RelayCommand]
         //UnidadesIngreso 
         public async Task<List<double>> SumaUnidadesIngreso()
         {
-            return await __context.UnidadSuma();
+            //Sera objeto de clase Recaudo
+            return await controlApiDBIngreso.UnidadSuma();
         }
     }
 }

@@ -12,11 +12,12 @@ namespace EstadisticaApp.DataAcces.Interfaces
     }
     public interface IModelsIngreso
     {
+        public string? Rubro { get; set; }
         double? Recaudado { set; get; }
         
     }
     public interface IModelsEgreso  {
-        public string? Rubro { get; set; }
+        
     }
    
 }

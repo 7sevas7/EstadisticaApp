@@ -7,7 +7,7 @@ namespace EstadisticaApp.Models
 {
 
     //Implmentara de otro lado 
-    public class UnidadesPresupuesto : ClaseLimitadoraPadre
+    public class UnidadesPresupuesto :IModelsIngreso
     {
         [Key]
         public int Id { get; set; }
@@ -26,7 +26,9 @@ namespace EstadisticaApp.Models
         public double? Imp_Comp_Dev_Eje_Pagado{set;get;}
  
         public string? Cve_Rubro_Ingreso { get; set; }
-        
+        public string? Rubro { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double? Recaudado { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         //public double? Recaudado { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         //public double? Recaudado { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }

@@ -7,11 +7,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EstadisticaApp.Models
 {
-    public class UnidadesIngresos :ClaseLimitadoraPadre, IModelsIngreso
+    public class UnidadesIngresos : IModelsIngreso
     {
         [Key]
         public int IdUnidades { get; set; }
-        public override string? Rubro { get; set; }
+        public  string? Rubro { get; set; }
         public string? Unidad { get; set; }
         
         public string? Mes { get; set; }

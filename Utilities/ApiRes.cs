@@ -21,7 +21,7 @@ namespace EstadisticaApp.Utilities
                        
 
         }
-        public async Task<List<Modeli>?> GetsListPresupuesto(string rubro){
+        public async Task<List<Modeli>?> GetsList(string tabla,string rubro){
             Debug.WriteLine("De peticion");
             
             List<Modeli>? lista = new();
@@ -30,7 +30,7 @@ namespace EstadisticaApp.Utilities
                 int rubroId = Convert.ToInt32(rubro);
                 Debug.WriteLine("Datos de Api Pre");
                // string uri = $"{baseUrl}Egresos/{rubro}";
-                HttpResponseMessage res = await httpClient.GetAsync($"Egresos/{rubro}");
+                HttpResponseMessage res = await httpClient.GetAsync($"{tabla}/{rubro}");
                 
 
                     string respuesta = await res.Content.ReadAsStringAsync();

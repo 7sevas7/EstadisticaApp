@@ -2,6 +2,10 @@
 @using EstadisticaApp.Models
 @using Blazorise.Charts
 @using EstadisticaApp.Utilities
+@using Radzen
+
+@inject DialogService DialogService
+
 @inherits CreateViewModel<VMRecUnidadGeneral>
 
 <Div  Class="row" Style="width:100vw;">
@@ -14,15 +18,21 @@
 
     <Div Class="col-lg-4 col-md-4 col-sm-3 col-xs-3   d-flex justify-content-end p-1 m-0" Margin="Blazorise.Margin.Is3.FromTop" >
         @*Este bar sera un componente*@
+        <Button Color="Color.Primary" Outline Clicked="@((rr)=>ShowDialogUpdateTable())">
+             <Icon Name="IconName.SyncAlt" TextColor="TextColor.Dark" IconSize="IconSize.Large" />
+             <p>14/12/2023(Ultima Actualización)</p>
+         </Button>
         <BarClasificacion/>
     </Div>
 
 </Div>
 
 
-@code {
+ @code {
     [Inject]
     protected ComponentEvents componentEvents{ set; get; }
+
+    public string EstateLoader { set; get; }
     //Atributos
 
     public string textoP = string.Empty;
@@ -39,10 +49,20 @@
         if (firstRender)
         {
 
-            await ViewModel.Gets();
-            unidades = await ViewModel.SumaUnidadesIngreso();//habra que modificar la consulta
-                                                             //await ViewModel.Guardar();
-            await HandleRedraw();
+            var count = await ViewModel.Gets();
+            if (count.Count > 0)
+            {
+                unidades = await ViewModel.SumaUnidadesIngreso();//habra que modificar la consulta
+                                                                 //await ViewModel.Guardar();
+                await HandleRedraw();
+            }
+            else
+            {
+                await ViewModel.Reload();
+                unidades = await ViewModel.SumaUnidadesIngreso();//habra que modificar la consulta                                                                //await ViewModel.Guardar();
+                await HandleRedraw();
+            }
+
         }
     }
 
@@ -93,7 +113,29 @@
 
             };
     }
+    async Task ShowDialogUpdateTable(){
 
+        BusyDialog();
+     
+         await ViewModel.Reload();
+        
+        
+
+
+        DialogService.Close();
+
+
+    }
+
+    // Busy dialog from markup
+    void BusyDialog()
+    {
+         DialogService.Open("", ds =>
+    @<RadzenStack AlignItems="AlignItems.Center" Gap="2rem" Class="rz-p-12 rounded">
+        <RadzenText TextStyle="TextStyle.DisplayH6"> @EstateLoader</RadzenText>
+        <div class="loader"></div>
+    </RadzenStack>, new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto", CloseDialogOnEsc = false });
+    }
  
 
 }

@@ -15,8 +15,9 @@ namespace EstadisticaApp.ViewModels
         //Clase de implmentacion
         private PresupuestoMain presupuestos = new PresupuestoMain();
        //PresupuestoMain presupuestos = new PresupuestoMain();
+        
         //Control de Api 
-        private readonly ControlApiDB<UnidadesPresupuesto> control = new ControlApiDB<UnidadesPresupuesto>();
+        private readonly ControlApiDBIngreso<UnidadesPresupuesto> control = new ControlApiDBIngreso<UnidadesPresupuesto>();
 
         //Sera un objeto el cual cuente con todas las sumas para la visualización de la grafica 
         [ObservableProperty]
@@ -44,7 +45,7 @@ namespace EstadisticaApp.ViewModels
         public override async Task Loaded()
         {
             //Para correjir errores
-            await control.verificarCount();
+            await control.VerificarData();
 
             Observerender = control.BoolCount;
             if (!control.BoolCount) {

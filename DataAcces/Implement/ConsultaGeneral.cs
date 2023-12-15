@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EstadisticaApp.DataAcces.Implement
 {
-    public class ConsultaGeneral<TT> : ClassAbst<TT>  where TT :IModelsIngreso
+    public class ConsultaGeneral<TT> : ClassAbst<TT>  where TT  : class,IModelsIngreso
     {
         private DBContext __context;
         public ConsultaGeneral()
@@ -37,18 +37,7 @@ namespace EstadisticaApp.DataAcces.Implement
             __context.ChangeTracker.Clear();
         }
 
-        //Suma de recaudado Tabla UndidadPresupuesto >  Por rubro
-        public override async Task<List<double>> UnidadSuma()
-        {
-            List<double> listSuma = new List<double>();
-            foreach (var item in Rubros)
-            {
-               var uni =  await __context.Set<TT>().Where(u => u.Rubro == item).SumAsync(r => r.Recaudado);
-                listSuma.Add((double)uni);
-            }
-
-            return listSuma;
-        }
+        
 
         public override async Task ClearTAble()
         {
@@ -57,6 +46,20 @@ namespace EstadisticaApp.DataAcces.Implement
         //Verifca conteo de contenido
         public override bool BoolCount() => __context.Set<TT>().Count() > 0 ? false : true;
 
+        //Suma de recaudado Tabla UndidadPresupuesto >  Por rubro
+        public override async Task<List<double>> UnidadSuma()
+        {
+            List<double> listSuma = new List<double>();
+            foreach (var item in Rubros)
+            {
+                var uni = await __context.Set<TT>().Where(u => u.Rubro == item).SumAsync(r => r.Recaudado);
+                listSuma.Add((double)uni);
+            }
+
+            return listSuma;
+        }
+
         List<string> Rubros = new List<string> { "01", "02", "03", "04", "05" };
+
     }
 }

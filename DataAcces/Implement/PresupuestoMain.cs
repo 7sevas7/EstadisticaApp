@@ -1,9 +1,7 @@
-﻿using EstadisticaApp.DataAcces.Interfaces;
+﻿
 using EstadisticaApp.Models;
-using EstadisticaApp.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Diagnostics;
 using System.Linq.Dynamic.Core;
 
 
@@ -13,7 +11,7 @@ namespace EstadisticaApp.DataAcces.Implement
     {
 
         private DBContext __context;
-        
+        List<string> Rubros = new List<string> { "01", "02", "03", "04", "05" };
 
         public List<UnidadesPresupuesto> UnidadXMes { set; get; }
 
@@ -30,7 +28,6 @@ namespace EstadisticaApp.DataAcces.Implement
             return await __context.UnidadesPresupuesto.ToListAsync();
             
         }
-
        
         //Solo datos de prueba
         public async Task InserPrueba()
@@ -70,7 +67,7 @@ namespace EstadisticaApp.DataAcces.Implement
             //Sera con un for para su modificacion por cada unidad
             //Se añadira el mes más adelante 
             List<UnidadesPresupuesto> acumulado = new();
-            foreach (var rubro in RubroList())
+            foreach (var rubro in Rubros)
             {
             UnidadesPresupuesto? presupuestoAcumulado = await __context.UnidadesPresupuesto
                 .Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro)
@@ -145,13 +142,8 @@ namespace EstadisticaApp.DataAcces.Implement
             return meses.ToArray();
         }
         //Simplemente para los subros he iterar 
-        public List<string> RubroList()
-        {
-            return new List<string> {"01","02","03","04","05"};
+        
 
-        }
-        
-        
         private string idenMes(int? mesInt) {
             switch (mesInt) {
                 case 1:
@@ -187,7 +179,7 @@ namespace EstadisticaApp.DataAcces.Implement
         public async Task<List<double?>> AcumuladoIngresos()
         {
             List<double?> ret = new List<double?>();
-            foreach (var item in RubroList())
+            foreach (var item in Rubros)
             {
                 var suma = await __context.UnidadesIngreso.Where(u => u.Rubro == item).SumAsync(r => r.Recaudado);
                 ret.Add(suma);

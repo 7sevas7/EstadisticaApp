@@ -16,7 +16,7 @@ namespace EstadisticaApp.Utilities
             service.AddTransient<VMPresupuestosMain>();
             
             service.AddScoped<ApiRes<IModelsIngreso>>();
-            service.AddScoped<ApiRes<IModelsEgreso>>();
+            
 
             return service;
         

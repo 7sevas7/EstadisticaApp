@@ -224,9 +224,7 @@ namespace EstadisticaApp.DataAcces.Implement
             }
             return ret;
         }
-        public async Task ClearTable() {
-            await __context.UnidadesPresupuesto.ExecuteDeleteAsync();
-        }
+       
         //Verificación si la tabla esta vacia 
         public bool BoolCount() => __context.UnidadesPresupuesto.Count() > 0 ? false : true;
     }

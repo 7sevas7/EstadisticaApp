@@ -15,7 +15,7 @@ namespace EstadisticaApp.ViewModels
 
        PresupuestoMain presupuestos = new PresupuestoMain();
         //Control de Api 
-        ControlApiDBPresupuesto control = new ControlApiDBPresupuesto();
+        
 
         //Sera un objeto el cual cuente con todas las sumas para la visualización de la grafica 
         [ObservableProperty]

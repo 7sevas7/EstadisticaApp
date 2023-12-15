@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace EstadisticaApp.DataAcces.Interfaces
 {
-    public interface IConsultasRec<Unidadd>
+    public interface IConsultasGeneral<Unidadd>
     {
        Task<List<Unidadd>> Get();
        Task Insert(List<Unidadd> listRange);
-        Task<List<double>> UnidadSuma();
+       Task<List<double>> UnidadSuma();
+       Task ClearTAble();
     }
     public interface IModels
     {

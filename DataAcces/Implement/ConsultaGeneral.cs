@@ -13,11 +13,10 @@ namespace EstadisticaApp.DataAcces.Implement
 
         }      
         public override async Task<List<TT>> Get()
-        {
-            
+        {            
             return await __context.Set<TT>().ToListAsync();
         }
-
+        //Insertar datos desde el api!
         public override async Task Insert(List<TT> listRange)
         {
             List<TT> insert = new();
@@ -37,6 +36,8 @@ namespace EstadisticaApp.DataAcces.Implement
             insert.Clear();
             __context.ChangeTracker.Clear();
         }
+
+        //Suma de recaudado Tabla UndidadPresupuesto >  Por rubro
         public override async Task<List<double>> UnidadSuma()
         {
             List<double> listSuma = new List<double>();
@@ -48,6 +49,12 @@ namespace EstadisticaApp.DataAcces.Implement
 
             return listSuma;
         }
+
+        public override async Task ClearTAble()
+        {
+            await __context.Set<TT>().ExecuteDeleteAsync();
+        }
+
         List<string> Rubros = new List<string> { "01", "02", "03", "04", "05" };
     }
 }

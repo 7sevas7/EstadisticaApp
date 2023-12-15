@@ -27,11 +27,13 @@ namespace EstadisticaApp.Controllers
             var count = presupuestoMain.BoolCount();
             string[] rubros = { "01","02","03","04","05"};
             
+            timeMeasure.Start();
+
             if (count)
             {
                 foreach (var item in rubros){                
                 
-                timeMeasure.Start();                
+                            
                     Debug.WriteLine("Entra A la petición");
                     try
                     {
@@ -47,10 +49,10 @@ namespace EstadisticaApp.Controllers
                     }
 
                 }
-                timeMeasure.Stop();
-                Debug.WriteLine(timeMeasure.Elapsed.TotalSeconds+"<<<<=Secgundos");
+                
             }
-
+            timeMeasure.Stop();
+            Debug.WriteLine("Llamado de api min:>>>>>>"+timeMeasure.Elapsed.TotalSeconds/60 + "<<<<=Secgundos");
         }
         
 

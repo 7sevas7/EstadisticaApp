@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace EstadisticaApp.Utilities
 {
     
-    public class ApiRes
+    public class ApiRes<Modeli> where Modeli : class
     {
 
         HttpClient httpClient;
@@ -21,10 +21,10 @@ namespace EstadisticaApp.Utilities
                        
 
         }
-        public async Task<List<UnidadesPresupuesto>?> GetsListPresupuesto(string rubro){
+        public async Task<List<Modeli>?> GetsListPresupuesto(string rubro){
             Debug.WriteLine("De peticion");
             
-            List<UnidadesPresupuesto>? lista = new();
+            List<Modeli>? lista = new();
             try
             {
                 int rubroId = Convert.ToInt32(rubro);
@@ -35,7 +35,7 @@ namespace EstadisticaApp.Utilities
 
                     string respuesta = await res.Content.ReadAsStringAsync();
                     //Debug.WriteLine(respuesta);
-                    lista = JsonConvert.DeserializeObject<List<UnidadesPresupuesto>>(respuesta);
+                    lista = JsonConvert.DeserializeObject<List<Modeli>>(respuesta);
                 
             }
             catch (Exception ex) {

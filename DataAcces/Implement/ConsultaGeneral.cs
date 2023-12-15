@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EstadisticaApp.DataAcces.Implement
 {
-    public class ConsultaGeneral<TT> : ClassAbst<TT>  where TT : class,IModels
+    public class ConsultaGeneral<TT> : ClassAbst<TT>  where TT :IModelsIngreso
     {
         private DBContext __context;
         public ConsultaGeneral()
@@ -54,6 +54,8 @@ namespace EstadisticaApp.DataAcces.Implement
         {
             await __context.Set<TT>().ExecuteDeleteAsync();
         }
+        //Verifca conteo de contenido
+        public override bool BoolCount() => __context.Set<TT>().Count() > 0 ? false : true;
 
         List<string> Rubros = new List<string> { "01", "02", "03", "04", "05" };
     }

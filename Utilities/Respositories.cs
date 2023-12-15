@@ -1,5 +1,7 @@
 ﻿
 using EstadisticaApp.Components.Pages;
+using EstadisticaApp.DataAcces.Implement;
+using EstadisticaApp.DataAcces.Interfaces;
 using EstadisticaApp.ViewModels;
 
 namespace EstadisticaApp.Utilities
@@ -12,6 +14,10 @@ namespace EstadisticaApp.Utilities
             service.AddTransient<VMRecUnidadGeneral>();            
             service.AddTransient<VMRecMesUnidad>();
             service.AddTransient<VMPresupuestosMain>();
+            
+            service.AddScoped<ApiRes<IModelsIngreso>>();
+            service.AddScoped<ApiRes<IModelsEgreso>>();
+
             return service;
         
         }

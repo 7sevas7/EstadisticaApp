@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace EstadisticaApp.DataAcces.Interfaces
 {
     public interface IConsultasGeneral<Unidadd>
@@ -12,11 +7,16 @@ namespace EstadisticaApp.DataAcces.Interfaces
        Task Insert(List<Unidadd> listRange);
        Task<List<double>> UnidadSuma();
        Task ClearTAble();
+        // Verificar conteo
+       bool BoolCount();
     }
-    public interface IModels
+    public interface IModelsIngreso
     {
-        string Rubro { set; get; }
         double? Recaudado { set; get; }
+        
     }
-
+    public interface IModelsEgreso  {
+        public string? Rubro { get; set; }
+    }
+   
 }

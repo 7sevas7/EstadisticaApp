@@ -1,8 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using EstadisticaApp.DataAcces.Implement;
+using EstadisticaApp.DataAcces.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace EstadisticaApp.Models
 {
-    public class UnidadesPresupuesto
+
+    //Implmentara de otro lado 
+    public class UnidadesPresupuesto : ClaseLimitadoraPadre
     {
         [Key]
         public int Id { get; set; }
@@ -21,7 +26,8 @@ namespace EstadisticaApp.Models
         public double? Imp_Comp_Dev_Eje_Pagado{set;get;}
  
         public string? Cve_Rubro_Ingreso { get; set; }
-
-
+        
+        //public double? Recaudado { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        //public double? Recaudado { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

@@ -9,7 +9,7 @@ using System.Linq.Dynamic.Core;
 
 namespace EstadisticaApp.DataAcces.Implement
 {
-    public class PresupuestoMain : IPresupuestoMain
+    public class PresupuestoMain 
     {
 
         private DBContext __context;
@@ -24,44 +24,14 @@ namespace EstadisticaApp.DataAcces.Implement
         }
         //Recordemos que entodo esta parte podria ri la implementacion de la memeoria cache 
         //Esta funcion los datos bentran desde al api que se generara 
-        public async Task InsertPresupuestos (List<UnidadesPresupuesto>? presupuestos)
-        {
-            List<UnidadesPresupuesto> listaInstert = new();
-            foreach (var item in presupuestos)
-            {
-                listaInstert.Add(item);
-                if (listaInstert.Count == 300) {
-                    await __context.UnidadesPresupuesto.AddRangeAsync(listaInstert);
-                    await __context.SaveChangesAsync();
-                    listaInstert.Clear();
-                    __context.ChangeTracker.Clear();
-                }
-            }
-            await __context.UnidadesPresupuesto.AddRangeAsync(listaInstert);
-            await __context.SaveChangesAsync();
-            listaInstert.Clear();
-            __context.ChangeTracker.Clear();
-
-            Debug.Write("============>Listo!!!>>>>>>>>>>>>");
-            
-        }
+      
         public async Task<List<UnidadesPresupuesto>>? GetUnidadesPresupuesto()
         {
             return await __context.UnidadesPresupuesto.ToListAsync();
             
         }
 
-        //Funcion de prueba para la insercion se datos 
-        public async Task InserPruebaComment()
-        {                                     
-            using var stream = await FileSystem.OpenAppPackageFileAsync("EgresosMes.json");
-            using var reader = new StreamReader(stream);
-            var ll = await reader.ReadToEndAsync();
-            var ListaPresupuesto = JsonConvert.DeserializeObject<List<UnidadesPresupuesto>>(ll);            
-            await InsertPresupuestos(ListaPresupuesto);
-            
-            
-        }
+       
         //Solo datos de prueba
         public async Task InserPrueba()
         {
@@ -96,7 +66,7 @@ namespace EstadisticaApp.DataAcces.Implement
 
         //
         //Esta funcion se podran añadir todos los demas sumas de Presupuestos// Se definira mas adelante en otra grafica //Exactamente es solo un un egreso pero no se cual por el momento 
-        public async Task<List<UnidadesPresupuesto>> AcumuladoUnidad() {
+        public async Task<List<UnidadesPresupuesto?>> AcumuladoUnidad() {
             //Sera con un for para su modificacion por cada unidad
             //Se añadira el mes más adelante 
             List<UnidadesPresupuesto> acumulado = new();
@@ -225,7 +195,5 @@ namespace EstadisticaApp.DataAcces.Implement
             return ret;
         }
        
-        //Verificación si la tabla esta vacia 
-        public bool BoolCount() => __context.UnidadesPresupuesto.Count() > 0 ? false : true;
     }
 }

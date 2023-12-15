@@ -12,7 +12,7 @@ namespace EstadisticaApp.Components.Pages
 
 
         
-        private readonly ConsultaGeneral<UnidadesIngresos> __context = new ConsultaGeneral<UnidadesIngresos>();
+        private readonly ConsultaGeneral<UnidadesIngresos> __context = new();
         public string Mensaje { set; get; }
         public List<UnidadesIngresos>? UnidadesIngreso = new List<UnidadesIngresos>();
 

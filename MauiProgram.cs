@@ -3,8 +3,9 @@ using Blazorise;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 using EstadisticaApp.DataAcces;
+
 using EstadisticaApp.Utilities;
-using Microsoft.Extensions.Configuration;
+
 using Microsoft.Extensions.Logging;
 using Radzen;
 
@@ -47,7 +48,7 @@ namespace EstadisticaApp
     		builder.Logging.AddDebug();
 #endif
 
-            builder.Services.AddSingleton<ApiRes>();
+            //builder.Services.AddSingleton<ApiRes<Class>>();
             return builder.Build();
         }
     }

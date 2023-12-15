@@ -12,10 +12,11 @@ namespace EstadisticaApp.ViewModels
 {
     public  partial class VMPresupuestosMain:VMBase
     {
-
-       PresupuestoMain presupuestos = new PresupuestoMain();
+        //Clase de implmentacion
+        private PresupuestoMain presupuestos = new PresupuestoMain();
+       //PresupuestoMain presupuestos = new PresupuestoMain();
         //Control de Api 
-        
+        private readonly ControlApiDB<UnidadesPresupuesto> control = new ControlApiDB<UnidadesPresupuesto>();
 
         //Sera un objeto el cual cuente con todas las sumas para la visualización de la grafica 
         [ObservableProperty]
@@ -45,8 +46,8 @@ namespace EstadisticaApp.ViewModels
             //Para correjir errores
             await control.verificarCount();
 
-            Observerender = presupuestos.BoolCount();
-            if (!presupuestos.BoolCount()) {
+            Observerender = control.BoolCount;
+            if (!control.BoolCount) {
                 
             //    Meses = await presupuestos.Meses();
                 
@@ -109,7 +110,7 @@ namespace EstadisticaApp.ViewModels
         //Se borraran los dato, para evitar información con mala consistencia 
         public async Task ClearTable() {
             Debug.WriteLine("Se borra");
-            await presupuestos.ClearTable();
+            await control.ClearTable();
         }
 
 

@@ -28,7 +28,7 @@
     public string textoP = string.Empty;
 
 
-    Dictionary<string, double> unidades;
+    List<double> unidades;
 
 
     PieChart<double> pieChart;
@@ -41,23 +41,23 @@
 
             await ViewModel.Gets();
             unidades = await ViewModel.SumaUnidadesIngreso();//habra que modificar la consulta
-            //await ViewModel.Guardar();
+                                                             //await ViewModel.Guardar();
             await HandleRedraw();
         }
     }
 
     async Task HandleRedraw()
     {
-        componentEvents.EventoState(this, new ServiceTitle { State = "Ingreso por Unidad Presupuestal" });//Titulo de Home, como parte de un estado
-     if(pieChart != null){
-        await pieChart.Clear();
-        //En esta parte podriamos hacer que se añada la acantidad
-        object[] label = { "Sistema DIF", "Junta de Asistencia", "Hosítal del Niño", "CRIH", "Procuraduria" };
-        setColors(label.Length);
-        await pieChart.AddLabels(label);
-        await pieChart.AddDataSet(GetPieChartDataset());
-        await pieChart.Update();
-     }
+        componentEvents.EventoState(this, new ServiceTitle { State = "Rescaudo por Unidad Presupuestal" });//Titulo de Home, como parte de un estado
+        if(pieChart != null){
+            await pieChart.Clear();
+            //En esta parte podriamos hacer que se añada la acantidad
+            object[] label = { "Sistema DIF", "Junta de Asistencia", "Hosítal del Niño", "CRIH", "Procuraduria" };
+            setColors(label.Length);
+            await pieChart.AddLabels(label);
+            await pieChart.AddDataSet(await GetPieChartDataset());
+            await pieChart.Update();
+        }
     }
     List<string> colorBack = new List<string>();
     List<string> colorBorder = new List<string>();
@@ -82,27 +82,18 @@
 
     }
 
-    PieChartDataset<double> GetPieChartDataset()
+    async Task<PieChartDataset<double>> GetPieChartDataset()
     {
-        
+        var data = await ViewModel.SumaUnidadesIngreso();
         return new PieChartDataset<double>
             {
-                Data = datosSet(),
+                Data = data,
                 BackgroundColor = colorBack,
                 BorderColor = colorBorder
 
             };
     }
 
-    private List<double> datosSet()
-    {
-        List<double> dataSet = new List<double>();
-        foreach (var item in unidades)
-        {
-            dataSet.Add(item.Value);
-        }
-
-        return dataSet;
-    }
+ 
 
 }

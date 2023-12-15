@@ -1,11 +1,12 @@
 ﻿
 
 
+using EstadisticaApp.DataAcces.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace EstadisticaApp.Models
 {
-    public class UnidadesIngresos
+    public class UnidadesIngresos : IModels
     {
         [Key]
         public int IdUnidades { get; set; }

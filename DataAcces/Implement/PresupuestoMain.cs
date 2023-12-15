@@ -1,4 +1,5 @@
 ﻿
+using EstadisticaApp.DataAcces.Interfaces;
 using EstadisticaApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -7,7 +8,7 @@ using System.Linq.Dynamic.Core;
 
 namespace EstadisticaApp.DataAcces.Implement
 {
-    public class PresupuestoMain 
+    public class PresupuestoMain<T> : ClassAbst<T> where T : UnidadesPresupuesto
     {
 
         private DBContext __context;
@@ -20,48 +21,7 @@ namespace EstadisticaApp.DataAcces.Implement
             __context = new DBContext();
             
         }
-        //Recordemos que entodo esta parte podria ri la implementacion de la memeoria cache 
-        //Esta funcion los datos bentran desde al api que se generara 
-      
-        public async Task<List<UnidadesPresupuesto>>? GetUnidadesPresupuesto()
-        {
-            return await __context.UnidadesPresupuesto.ToListAsync();
-            
-        }
-       
-        //Solo datos de prueba
-        public async Task InserPrueba()
-        {
-            using var stream = await FileSystem.OpenAppPackageFileAsync("EgresosMes.json");
-            var serial = new JsonSerializer();
-            List<UnidadesPresupuesto> insert = new List<UnidadesPresupuesto>();
-            using (var reader = new StreamReader(stream))
-            using (var jsonReader = new JsonTextReader(reader))
-            {
-                while (jsonReader.Read()) {
-                    if (jsonReader.TokenType == JsonToken.StartObject) {
-                        var obj = serial.Deserialize<UnidadesPresupuesto>(jsonReader);
-                        insert.Add(obj);
-                        if (insert.Count == 100) {
-                            await __context.UnidadesPresupuesto.AddRangeAsync(insert);
-                            __context.SaveChanges();
-                            insert.Clear();
-                            __context.ChangeTracker.Clear();
-                        }
-                        
-                    }
-                }
-              
-            }
 
-            await __context.UnidadesPresupuesto.AddRangeAsync(insert);
-            __context.SaveChanges();
-            __context.ChangeTracker.Clear();
-
-
-        }
-
-        //
         //Esta funcion se podran añadir todos los demas sumas de Presupuestos// Se definira mas adelante en otra grafica //Exactamente es solo un un egreso pero no se cual por el momento 
         public async Task<List<UnidadesPresupuesto?>> AcumuladoUnidad() {
             //Sera con un for para su modificacion por cada unidad
@@ -175,7 +135,8 @@ namespace EstadisticaApp.DataAcces.Implement
             }
            
         }
-        //Simplemente es la suma para diferenciar con los ingresados
+        //Simplemente es la suma para diferenciar con los ingresados/
+        //Solo es una consulta para el grafico
         public async Task<List<double?>> AcumuladoIngresos()
         {
             List<double?> ret = new List<double?>();
@@ -186,6 +147,49 @@ namespace EstadisticaApp.DataAcces.Implement
             }
             return ret;
         }
-       
+      ///===================
+        public override bool BoolCount()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task ClearTAble()
+        {
+            throw new NotImplementedException();
+        }
+        
+        //Recuerden que es suma por unidad presupuestal 
+        public override async Task<List<T>> Get()
+        {
+            List<T> acumulado = new();
+            foreach (var item in Rubros)
+            {
+                var presupuesto = await __context.Set<T>().Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2).Contains(item))
+                    .Select(pre => new UnidadesPresupuesto
+                    {
+                        Cve_Rubro_Ingreso = pre.Cve_Rubro_Ingreso.Substring(2, 2),
+                        Num_Mes = pre.Num_Mes,
+                        Egreso_Imp_aprobado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == item).Sum(u => u.Egreso_Imp_aprobado),
+                        egreso_Imp_Ampliacion = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == item).Sum(u => u.egreso_Imp_Ampliacion),
+                        Egreso_Imp_Reduccion = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == item).Sum(u => u.Egreso_Imp_Reduccion),
+                        imp_Modificado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == item).Sum(u => u.imp_Modificado),
+                        Imp_Comp_Dev_Eje_Pagado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == item).Sum(u => u.Imp_Comp_Dev_Eje_Pagado)
+
+                    })
+                    .FirstAsync();
+
+            }
+            return acumulado;
+        }
+
+        public override Task Insert(List<T> listRange)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<List<double>> UnidadSuma()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

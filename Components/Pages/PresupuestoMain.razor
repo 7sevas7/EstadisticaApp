@@ -27,7 +27,7 @@
                 <ChartTrendline @ref="chartTrendline" TItem="double?" />
             </Chart>
             
-            <Donut/>
+            @*<Donut/>*@
         </Div>
 
         <Div Class="col-lg-2 col-md-12 col-sm-12 col-xs-12 px-auto my-3 "  Style="overflow-y:auto;">
@@ -78,12 +78,15 @@ else
     Chart<double?> chart;
 
     ChartTrendline<double?> chartTrendline;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            var count = ViewModel.Gets();
 
             await HandleRedraw();
+
         }
     }
 

@@ -13,11 +13,11 @@ namespace EstadisticaApp.ViewModels
     public  partial class VMPresupuestosMain:VMBase
     {
         //Clase de implmentacion
-        private PresupuestoMain presupuestos = new PresupuestoMain();
-       //PresupuestoMain presupuestos = new PresupuestoMain();
-        
+        private ControlApiDBEgreso<UnidadesPresupuesto> presupuestos = new ControlApiDBEgreso<UnidadesPresupuesto>();
+        //PresupuestoMain presupuestos = new PresupuestoMain();
+
         //Control de Api 
-        private readonly ControlApiDBIngreso<UnidadesPresupuesto> control = new ControlApiDBIngreso<UnidadesPresupuesto>();
+        private readonly ControlApiDBIngreso<UnidadesIngresos> controlIngresos = new ControlApiDBIngreso<UnidadesIngresos>();
 
         //Sera un objeto el cual cuente con todas las sumas para la visualización de la grafica 
         [ObservableProperty]
@@ -52,7 +52,7 @@ namespace EstadisticaApp.ViewModels
                 
             //    Meses = await presupuestos.Meses();
                 
-                AcumuladoIngresoUnidad = await presupuestos.AcumuladoIngresos();
+                AcumuladoIngresoUnidad = await controlIngresos.AcumuladoIngresos();
             //    //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
                ListaPresupuesto = await presupuestos.AcumuladoUnidad();
             }

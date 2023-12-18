@@ -1,5 +1,4 @@
-using EstadisticaApp.Models;
-using Microsoft.AspNetCore.Components;
+
 using Newtonsoft.Json;
 using System.Diagnostics;
 
@@ -16,9 +15,10 @@ namespace EstadisticaApp.Utilities
         {
             //Recibira la base de la ruta que utilizara
             httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://172.16.4.25:80/apiPruebas/api/");
-           // baseUrl = "http://172.16.4.25:80/apiPruebas/api/";
-                       
+            httpClient.BaseAddress = new Uri("http://192.168.1.67/apiPruebas/api/");
+//            httpClient.BaseAddress = new Uri("http://172.16.4.25:80/apiPruebas/api/");
+            // baseUrl = "http://172.16.4.25:80/apiPruebas/api/";
+
 
         }
         public async Task<List<Modeli>?> GetsList(string tabla,string rubro){

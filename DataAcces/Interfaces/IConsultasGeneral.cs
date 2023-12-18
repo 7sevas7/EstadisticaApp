@@ -5,7 +5,7 @@ namespace EstadisticaApp.DataAcces.Interfaces
     {
        Task<List<Unidadd>> Get();
        Task Insert(List<Unidadd> listRange);
-       Task<List<double>> UnidadSuma();
+      // Task<List<double>> UnidadSuma();
        Task ClearTAble();
         // Verificar conteo
        bool BoolCount();

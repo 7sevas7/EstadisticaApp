@@ -14,7 +14,7 @@ namespace EstadisticaApp.DataAcces.Implement
         private DBContext __context;
         List<string> Rubros = new List<string> { "01", "02", "03", "04", "05" };
 
-        public List<UnidadesPresupuesto> UnidadXMes { set; get; }
+        
 
         public PresupuestoMain()
         {
@@ -48,8 +48,9 @@ namespace EstadisticaApp.DataAcces.Implement
         }
             return acumulado;
         }
+
         //Lista que debuelve cada recaudo por unida, pero en cada objeto la suma de tal
-        public async Task UnidadXMeses(string rubro)
+        public async Task<List<UnidadesPresupuesto>>? UnidadXMeses(string? rubro)
         {
             //Sera con un for para su modificacion por cada unidad
             //Se añadira el mes más adelante 
@@ -61,7 +62,7 @@ namespace EstadisticaApp.DataAcces.Implement
                 var mesUnidad = await  UnidadMes(rubro, item);
                 listaXMEs.Add(mesUnidad);
             }
-            UnidadXMes =  listaXMEs.OrderBy(mes => mes.Num_Mes).ToList();
+            return listaXMEs.OrderBy(mes => mes.Num_Mes).ToList();
         }
         //Devuleve una lista de recaudo de un tipo con el subro establecido
         //Devuelve un objeto son sus respectivas sumas 
@@ -187,9 +188,6 @@ namespace EstadisticaApp.DataAcces.Implement
             throw new NotImplementedException();
         }
 
-        public override Task<List<double>> UnidadSuma()
-        {
-            throw new NotImplementedException();
-        }
+     
     }
 }

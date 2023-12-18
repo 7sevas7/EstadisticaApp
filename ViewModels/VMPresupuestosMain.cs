@@ -13,11 +13,11 @@ namespace EstadisticaApp.ViewModels
     public  partial class VMPresupuestosMain:VMBase
     {
         //Clase de implmentacion
-        private ControlApiDBEgreso<UnidadesPresupuesto> presupuestos = new ControlApiDBEgreso<UnidadesPresupuesto>();
+        private ControlApiDBEgreso<UnidadesPresupuesto> controlPresupuestos = new ControlApiDBEgreso<UnidadesPresupuesto>();
         //PresupuestoMain presupuestos = new PresupuestoMain();
 
         //Control de Api 
-        private readonly ControlApiDBIngreso<UnidadesIngresos> controlIngresos = new ControlApiDBIngreso<UnidadesIngresos>();
+        //private readonly ControlApiDBIngreso<UnidadesIngresos> controlIngresos = new ControlApiDBIngreso<UnidadesIngresos>();
 
         //Sera un objeto el cual cuente con todas las sumas para la visualización de la grafica 
         [ObservableProperty]
@@ -42,19 +42,28 @@ namespace EstadisticaApp.ViewModels
         [ObservableProperty]
         public bool observerender = false;
 
+        //Recarga de datos 
+        public async Task Reload() {
+            await controlPresupuestos.ClearTable();
+            await controlPresupuestos.VerificarData();
+            var vacio = controlPresupuestos.BoolCount;
+            
+        }
+        
+
         public override async Task Loaded()
         {
             //Para correjir errores
-            await control.VerificarData();
+            await controlPresupuestos.VerificarData();
 
-            Observerender = control.BoolCount;
-            if (!control.BoolCount) {
+            Observerender = controlPresupuestos.BoolCount;
+            if (!Observerender) {
                 
             //    Meses = await presupuestos.Meses();
                 
-                AcumuladoIngresoUnidad = await controlIngresos.AcumuladoIngresos();
+                AcumuladoIngresoUnidad = await controlPresupuestos.AcumuladoIngresos();//>>>>>>>>Este solo de las
             //    //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
-               ListaPresupuesto = await presupuestos.AcumuladoUnidad();
+               ListaPresupuesto = await controlPresupuestos.AcumuladoUnidad();
             }
           
            
@@ -71,15 +80,15 @@ namespace EstadisticaApp.ViewModels
         [RelayCommand]
         public async Task unidadMes(string rubro)
         {
-            await presupuestos.UnidadXMeses(rubro);
-            ListaXmes = presupuestos.UnidadXMes;
+            ListaXmes = await controlPresupuestos.UnidadXMeses(rubro);
+             
 
         }
 
         [RelayCommand]
         public async Task AcumuladoUnidad()
         {
-           AcumuladoIngresoUnidad =  await presupuestos.AcumuladoIngresos();
+           AcumuladoIngresoUnidad =  await controlPresupuestos.AcumuladoIngresos();
         }
         //Lo podremos definir en un estado
 
@@ -111,7 +120,7 @@ namespace EstadisticaApp.ViewModels
         //Se borraran los dato, para evitar información con mala consistencia 
         public async Task ClearTable() {
             Debug.WriteLine("Se borra");
-            await control.ClearTable();
+            await controlPresupuestos.ClearTable();
         }
 
 

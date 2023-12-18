@@ -81,9 +81,17 @@ else
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+
         if (firstRender)
         {
-            var count = ViewModel.Gets();
+            //sE ARA CON LOS DATOS PARA MOSTRASR 
+            var vacio = ViewModel.Observerender;
+            //Dependera que si se puede verificar si no pues negarlo
+            if (vacio)
+            {
+                await ViewModel.Reload();
+                await HandleRedraw();
+            }
 
             await HandleRedraw();
 

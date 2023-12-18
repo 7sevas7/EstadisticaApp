@@ -1,24 +1,31 @@
 ﻿
+using EstadisticaApp.DataAcces;
 using EstadisticaApp.DataAcces.Implement;
-using EstadisticaApp.DataAcces.Interfaces;
 
+using EstadisticaApp.Models;
 using EstadisticaApp.Utilities;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 
 namespace EstadisticaApp.Controllers
 {
-    public class ControlApiDBIngreso<TT> where TT :class,IModelsIngreso
+    public class ControlApiDBIngreso<TT> where TT : UnidadesIngresos
     {
 
         private readonly ConsultaGeneral<TT> __context;
+        private readonly DBContext __contexIn;
 
         private ApiRes<TT> apiRes;
+
+        
 
         public ControlApiDBIngreso()
         {
             apiRes = new ApiRes<TT>();
             __context = new ConsultaGeneral<TT>();
+
+            
 
 
         }
@@ -65,7 +72,22 @@ namespace EstadisticaApp.Controllers
             Debug.WriteLine("Llamado de api min:>>>>>>"+timeMeasure.Elapsed.TotalSeconds/60 + "<<<<=Secgundos");
         }
         public async Task ClearTable() => await __context.ClearTAble();
-        public async Task<List<double>> UnidadSuma() => await __context.UnidadSuma();
+        //public async Task<List<double>> UnidadSuma() => await UnidadSuma();
+
+        //Esta funcion sera asi ya que aun no se soluciona para hacer la consulta de manera mas general
+        public  async Task<List<double>> UnidadSuma()
+        {
+            List<double> listSuma = new List<double>();
+            foreach (var item in Rubros)
+            {
+                var uni = await __contexIn.Set<TT>().Where( U => U.Rubro == item).SumAsync(r => r.Recaudado);
+                    
+                listSuma.Add((double)uni);
+            }
+
+            return listSuma;
+        }
+        List<string> Rubros = new List<string> { "01", "02", "03", "04", "05" };
 
     }
 

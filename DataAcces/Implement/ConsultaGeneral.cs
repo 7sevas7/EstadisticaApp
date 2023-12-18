@@ -24,12 +24,12 @@ namespace EstadisticaApp.DataAcces.Implement
             foreach (var item in listRange)
             {
                 insert.Add(item);
-                if (insert.Count == 300)
+                if (insert.Count == 600)
                 {
                     await __context.Set<TT>().AddRangeAsync(insert);
                     await __context.SaveChangesAsync();
                     insert.Clear();
-                    __context.ChangeTracker.Clear();
+                    //__context.ChangeTracker.Clear();
                 }
             }
             await __context.Set<TT>().AddRangeAsync(insert);

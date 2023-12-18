@@ -57,14 +57,12 @@ namespace EstadisticaApp.ViewModels
             await controlPresupuestos.VerificarData();
 
             Observerender = controlPresupuestos.BoolCount;
-            if (!Observerender) {
-                
+            
             //    Meses = await presupuestos.Meses();
-                
                 AcumuladoIngresoUnidad = await controlPresupuestos.AcumuladoIngresos();//>>>>>>>>Este solo de las
             //    //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
                ListaPresupuesto = await controlPresupuestos.AcumuladoUnidad();
-            }
+            
           
            
 
@@ -80,8 +78,7 @@ namespace EstadisticaApp.ViewModels
         [RelayCommand]
         public async Task unidadMes(string rubro)
         {
-            ListaXmes = await controlPresupuestos.UnidadXMeses(rubro);
-             
+            ListaXmes = await controlPresupuestos.UnidadXMeses(rubro);             
 
         }
 

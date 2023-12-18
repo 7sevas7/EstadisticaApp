@@ -51,7 +51,7 @@ namespace EstadisticaApp.Controllers
                     try
                     {
                         //Viene desde 
-                        var presupuestoApi = await apiRes.GetsList("Ingresos", item);
+                        var presupuestoApi = await apiRes.GetsList("Egresos", item);
                         Debug.WriteLine("Contador>>" + presupuestoApi.Count);
 
                         await __context.Insert(presupuestoApi);

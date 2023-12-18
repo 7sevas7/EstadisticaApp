@@ -14,7 +14,8 @@ namespace EstadisticaApp.Controllers
     {
 
         private readonly ConsultaGeneral<TT> __context;
-        private readonly DBContext __contexIn;
+        
+        private readonly DBContext contexIn;
 
         private ApiRes<TT> apiRes;
 
@@ -25,7 +26,7 @@ namespace EstadisticaApp.Controllers
             apiRes = new ApiRes<TT>();
             __context = new ConsultaGeneral<TT>();
 
-            
+            contexIn = new DBContext();
 
 
         }
@@ -69,7 +70,7 @@ namespace EstadisticaApp.Controllers
                 
             }
             timeMeasure.Stop();
-            Debug.WriteLine("Llamado de api min:>>>>>>"+timeMeasure.Elapsed.TotalSeconds/60 + "<<<<=Secgundos");
+            Debug.WriteLine("Llamado de api min:>>>>>>"+timeMeasure.Elapsed.TotalSeconds + "<<<<=Segundos");
         }
         public async Task ClearTable() => await __context.ClearTAble();
         //public async Task<List<double>> UnidadSuma() => await UnidadSuma();
@@ -80,13 +81,15 @@ namespace EstadisticaApp.Controllers
             List<double> listSuma = new List<double>();
             foreach (var item in Rubros)
             {
-                var uni = await __contexIn.Set<TT>().Where( U => U.Rubro == item).SumAsync(r => r.Recaudado);
+                var uni = await contexIn.Set<TT>().Where( U => U.Rubro == item).SumAsync(r => r.Recaudado);
                     
                 listSuma.Add((double)uni);
             }
 
             return listSuma;
         }
+
+
         List<string> Rubros = new List<string> { "01", "02", "03", "04", "05" };
 
     }

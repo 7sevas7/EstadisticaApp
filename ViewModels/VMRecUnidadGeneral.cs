@@ -24,12 +24,15 @@ namespace EstadisticaApp.Components.Pages
         }
         public async Task Reload() {
             Debug.WriteLine("Se recarga");
+            //Verificar primero la conexión
+
             await controlApiDBIngreso.ClearTable();
             
             await controlApiDBIngreso.VerificarData();            
             var vacio = controlApiDBIngreso.BoolCount;
             
             if (vacio) {
+
                 Debug.WriteLine("Correcto");
             }
             else

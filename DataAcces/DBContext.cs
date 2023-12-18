@@ -18,6 +18,7 @@ namespace EstadisticaApp.DataAcces
         {
             
             string conexion = $"Filename={ConexionDBDevice.Ruta("SIEB.db")}";
+            optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.UseSqlite(conexion);
 
         }

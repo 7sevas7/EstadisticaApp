@@ -3,6 +3,7 @@
 @using Blazorise.Charts
 @using EstadisticaApp.Utilities
 @using Radzen
+@using System.Diagnostics
 
 @inject DialogService DialogService
 
@@ -48,7 +49,7 @@
 
         if (firstRender)
         {
-
+            componentEvents.EventoState(this, new ServiceTitle { State = "Rescaudo por Unidad Presupuestal" });
             var count = await ViewModel.Gets();
             if (count.Count > 0)
             {
@@ -58,8 +59,9 @@
             }
             else
             {
+
                 await ViewModel.Reload();
-                unidades = await ViewModel.SumaUnidadesIngreso();//habra que modificar la consulta                                                                //await ViewModel.Guardar();
+                unidades = await ViewModel.SumaUnidadesIngreso();//habra que modificar la consulta
                 await HandleRedraw();
             }
 
@@ -68,7 +70,7 @@
 
     async Task HandleRedraw()
     {
-        componentEvents.EventoState(this, new ServiceTitle { State = "Rescaudo por Unidad Presupuestal" });//Titulo de Home, como parte de un estado
+        //Titulo de Home, como parte de un estado
         if(pieChart != null){
             await pieChart.Clear();
             //En esta parte podriamos hacer que se añada la acantidad
@@ -104,10 +106,10 @@
 
     async Task<PieChartDataset<double>> GetPieChartDataset()
     {
-        var data = await ViewModel.SumaUnidadesIngreso();
+        //var data = await ViewModel.SumaUnidadesIngreso();
         return new PieChartDataset<double>
             {
-                Data = data,
+                Data = unidades,
                 BackgroundColor = colorBack,
                 BorderColor = colorBorder
 
@@ -115,14 +117,21 @@
     }
     async Task ShowDialogUpdateTable(){
 
-        BusyDialog();
-     
-         await ViewModel.Reload();
-        
-        
+        //BusyDialog();
+        try
+        {
+            await ViewModel.Reload();
+            unidades = await ViewModel.SumaUnidadesIngreso();
 
+            await HandleRedraw();
 
-        DialogService.Close();
+        }catch(Exception ex)
+        {
+            Debug.WriteLine(ex.Message.ToString());    
+
+        }
+
+        // DialogService.Close();
 
 
     }
@@ -131,11 +140,50 @@
     void BusyDialog()
     {
          DialogService.Open("", ds =>
-    @<RadzenStack AlignItems="AlignItems.Center" Gap="2rem" Class="rz-p-12 rounded">
-        <RadzenText TextStyle="TextStyle.DisplayH6"> @EstateLoader</RadzenText>
-        <div class="loader"></div>
-    </RadzenStack>, new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto", CloseDialogOnEsc = false });
+            @<RadzenStack AlignItems="AlignItems.Center" Gap="2rem" Class="rz-p-12 rounded">
+                <RadzenText TextStyle="TextStyle.DisplayH6"> @EstateLoader</RadzenText>
+                <div class="loader"></div>
+            </RadzenStack>, new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto", CloseDialogOnEsc = false });
     }
  
 
 }
+
+<style>
+
+    .loader {
+        width: 60%;
+        aspect-ratio: 1;
+        color: #f03355;
+        position: relative;
+        background: conic-gradient(from 134deg at top,currentColor 92deg,#0000 0) top, conic-gradient(from -46deg at bottom,currentColor 92deg,#0000 0) bottom;
+        background-size: 100% 50%;
+        background-repeat: no-repeat;
+    }
+
+        .loader:before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            --g: currentColor 14.5px,#0000 0 calc(100% - 14.5px),currentColor 0;
+            background: linear-gradient( 45deg,var(--g)), linear-gradient(-45deg,var(--g));
+            animation: l7 1.5s infinite cubic-bezier(0.3,1,0,1);
+        }
+
+    @@keyframes l7 {
+        33% {
+            inset: -10px;
+            transform: rotate(0deg)
+        }
+
+        66% {
+            inset: -10px;
+            transform: rotate(90deg)
+        }
+
+        100% {
+            inset: 0;
+            transform: rotate(90deg)
+        }
+    }
+</style>

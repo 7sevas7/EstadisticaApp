@@ -1,4 +1,5 @@
-﻿@using EstadisticaApp.Models
+﻿@using EstadisticaApp.DataAcces.Implement
+@using EstadisticaApp.Models
 @using Radzen
 @using Radzen.Blazor
 
@@ -12,13 +13,13 @@
         <div class="col-sm-12 col-lg-6 offset-lg-3 my-5">
 
             <RadzenChart>
-                <RadzenDonutSeries Data="@revenue" CategoryProperty="Quarter" ValueProperty="Revenue" TotalAngle="180" StartAngle="180">
+                <RadzenDonutSeries Data="@revenue" CategoryProperty="Quarter" ValueProperty="Revenue" Fills="@colores" TotalAngle="180" StartAngle="180">
                     <ChildContent>
                         <RadzenSeriesDataLabels Visible="true" />
                     </ChildContent>
                     <TitleTemplate>
                         <div class="rz-donut-content">
-                            <div>$</div>
+                            <div>$Modificado</div>
                         </div>
                     </TitleTemplate>
                 </RadzenDonutSeries>
@@ -63,7 +64,7 @@
                 </RadzenColumn>
                 @*Tercer Columna*@
                 <RadzenColumn Size="12" SizeLG="2" Class="rz-p-4">
-                    <RadzenButton Text="Order now" Style="width: 100%" />
+                    <RadzenButton Text="Ver detalles" Style="width: 100%" />
                 </RadzenColumn>
                    
                 
@@ -127,25 +128,33 @@
  
 
 @code {
-    
+
     bool showDataLabels = false;
 
     class DataItem
     {
         public string Quarter { get; set; }
         public double Revenue { get; set; }
-    }
 
+    }
+    
+    IEnumerable<string> colores = new string[] { "#36a2eb", "#939393" };
     DataItem[] revenue = new DataItem[] {
     new DataItem
     {
     Quarter = "Gastado",
-    Revenue = 300000
+    Revenue = 300000,
+    
     },
     new DataItem
     {
-    Quarter = "Modificado",
+    Quarter = "Por Gastar",
     Revenue = 100000
     },
     };
+
+
+    private ConsultaGeneral<UnidadesPresupuesto> consultaGeneral = new ConsultaGeneral<UnidadesPresupuesto>();
+
+
 } 

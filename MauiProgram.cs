@@ -21,6 +21,7 @@ namespace EstadisticaApp
             dbContext.Database.EnsureCreatedAsync().Wait();
             dbContext.Dispose();
             builder.Services.AddDbContext<DBContext>();
+            builder.Services.AddScoped<DBContext>();
             //Service title
             builder.Services.AddScoped<ComponentEvents>();
 
@@ -41,10 +42,10 @@ namespace EstadisticaApp
             builder.Services.AddMauiBlazorWebView();
             //Radzen
             builder.Services.AddRadzenComponents();
-
+            
 
 #if DEBUG
-    		builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
 

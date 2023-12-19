@@ -1,9 +1,11 @@
 ﻿
+
 using EstadisticaApp.DataAcces.Interfaces;
 using EstadisticaApp.Models;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+
 using System.Linq.Dynamic.Core;
+
 
 
 namespace EstadisticaApp.DataAcces.Implement
@@ -14,59 +16,33 @@ namespace EstadisticaApp.DataAcces.Implement
         private DBContext __context;
         List<string> Rubros = new List<string> { "01", "02", "03", "04", "05" };
 
-        
+
 
         public PresupuestoMain()
         {
             __context = new DBContext();
-            
-        }
-
-        //Esta funcion se podran añadir todos los demas sumas de Presupuestos// Se definira mas adelante en otra grafica //Exactamente es solo un un egreso pero no se cual por el momento 
-        public async Task<List<UnidadesPresupuesto?>> AcumuladoUnidad() {
-            //Sera con un for para su modificacion por cada unidad
-            //Se añadira el mes más adelante 
-            List<UnidadesPresupuesto> acumulado = new();
-            foreach (var rubro in Rubros)
-            {
-            UnidadesPresupuesto? presupuestoAcumulado = await __context.UnidadesPresupuesto
-                .Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro)
-                .Select(pre => new UnidadesPresupuesto
-                {
-                    Cve_Rubro_Ingreso = pre.Cve_Rubro_Ingreso.Substring(2, 2),
-                    Num_Mes = pre.Num_Mes,
-                    Egreso_Imp_aprobado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro).Sum(u => u.Egreso_Imp_aprobado),
-                    egreso_Imp_Ampliacion = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro).Sum(u => u.egreso_Imp_Ampliacion),
-                    Egreso_Imp_Reduccion = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro).Sum(u => u.Egreso_Imp_Reduccion),
-                    imp_Modificado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro).Sum(u => u.imp_Modificado),
-                    Imp_Comp_Dev_Eje_Pagado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro).Sum(u => u.Imp_Comp_Dev_Eje_Pagado)
-
-                })
-                .FirstOrDefaultAsync();//Añadir ciclo mes !!
-                acumulado.Add(presupuestoAcumulado);
 
         }
-            return acumulado;
-        }
 
+      
         //Lista que debuelve cada recaudo por unida, pero en cada objeto la suma de tal
         public async Task<List<UnidadesPresupuesto>>? UnidadXMeses(string? rubro)
         {
             //Sera con un for para su modificacion por cada unidad
             //Se añadira el mes más adelante 
             List<UnidadesPresupuesto>? listaXMEs = new();
-            
+
             var mes = await MesesN();
             foreach (var item in mes)
             {
-                var mesUnidad = await  UnidadMes(rubro, item);
+                var mesUnidad = await UnidadMes(rubro, item);
                 listaXMEs.Add(mesUnidad);
             }
             return listaXMEs.OrderBy(mes => mes.Num_Mes).ToList();
         }
         //Devuleve una lista de recaudo de un tipo con el subro establecido
         //Devuelve un objeto son sus respectivas sumas 
-        public async Task<UnidadesPresupuesto>? UnidadMes(string rubro,int? mes )
+        public async Task<UnidadesPresupuesto>? UnidadMes(string rubro, int? mes)
         {
             UnidadesPresupuesto? presupuestoMes = await __context.UnidadesPresupuesto
               .Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro && u.Num_Mes == mes)
@@ -88,25 +64,28 @@ namespace EstadisticaApp.DataAcces.Implement
         {
             List<int?> listaM = new List<int?>();
             listaM = await __context.UnidadesPresupuesto.Select(u => u.Num_Mes).Distinct().ToListAsync();
-            
+
             return listaM;
         }
-       //Para organizar la lista de meses
+        //Para organizar la lista de meses
         public async Task<string[]> Meses()
         {
             List<string> meses = new();
             var mesesN = await MesesN();
             var ordenado = mesesN.OrderBy(x => x.Value);
-            foreach (var mes in ordenado) {
-                meses.Add(idenMes(mes));   
+            foreach (var mes in ordenado)
+            {
+                meses.Add(idenMes(mes));
             }
             return meses.ToArray();
         }
         //Simplemente para los subros he iterar 
-        
 
-        private string idenMes(int? mesInt) {
-            switch (mesInt) {
+
+        private string idenMes(int? mesInt)
+        {
+            switch (mesInt)
+            {
                 case 1:
                     return "ENERO";
                 case 2:
@@ -123,18 +102,18 @@ namespace EstadisticaApp.DataAcces.Implement
                     return "JULIO";
                 case 8:
                     return "AGOSTO";
-                    case 9:
+                case 9:
                     return "SEPTIEMBRE";
                 case 10:
                     return "OCTUBRE";
                 case 11:
                     return "NOVIEMBRE";
                 case 12:
-                return "DICIEMBRE";
-                    default:
+                    return "DICIEMBRE";
+                default:
                     return "--";
             }
-           
+
         }
         //Simplemente es la suma para diferenciar con los ingresados/
         //Solo es una consulta para el grafico
@@ -148,7 +127,13 @@ namespace EstadisticaApp.DataAcces.Implement
             }
             return ret;
         }
-      ///===================
+        //necesito solo lo recaudado por unidad entonces implmentare un funcion donde recaude todo lo acumulado, para asugnarlo en un objeto de UnidadesPresupuesto
+        //En caso que se ocupe el objeto del elementoen cuation crea una clase hijo con el nuevo elemento
+        public async Task<double?> IngresoUnidad(string rubro) {
+            return await __context.UnidadesIngreso.Where(u => u.Rubro.Contains(rubro)).SumAsync(u => u.Recaudado);
+            
+        }
+        ///===================
         public override bool BoolCount()
         {
             throw new NotImplementedException();
@@ -158,7 +143,7 @@ namespace EstadisticaApp.DataAcces.Implement
         {
             throw new NotImplementedException();
         }
-        
+
         //Recuerden que es suma por unidad presupuestal 
         public override async Task<List<T>> Get()
         {
@@ -178,16 +163,22 @@ namespace EstadisticaApp.DataAcces.Implement
 
                     })
                     .FirstAsync();
-
+                acumulado.Add((T)presupuesto);
             }
             return acumulado;
         }
+
+
 
         public override Task Insert(List<T> listRange)
         {
             throw new NotImplementedException();
         }
 
-     
+        public async Task<double?> UnTotal(string rubro, string columna)
+        {
+            return await __context.Set<T>().Where(U => U.Cve_Rubro_Ingreso.Substring(2, 2).Contains(rubro)).Select(columna).Cast<double>().SumAsync();
+
+        }
     }
 }

@@ -1,82 +1,86 @@
-﻿@using EstadisticaApp.DataAcces.Implement
+﻿
+@using EstadisticaApp.Controllers
+@using EstadisticaApp.DataAcces.Implement
 @using EstadisticaApp.Models
 @using Radzen
 @using Radzen.Blazor
 
 @using Microsoft.EntityFrameworkCore
+@using System.Diagnostics
 
 
 
+    
+        
+            <div class="col-sm-12 col-lg-12 offset-lg-12 mt-3">
+                <RadzenChart >
+                    <RadzenDonutSeries Data="@revenue" Title="Title" CategoryProperty="Quarter" ValueProperty="Revenue" InnerRadius="100"  Radius="120" Fills="@colores" TotalAngle="180"  StartAngle="180">
+                        <ChildContent>
+                        <RadzenMarkers MarkerType="MarkerType.Circle" />
+                            <RadzenSeriesDataLabels Visible="true" OffsetY="-20" />
+                        </ChildContent>
+                        <TitleTemplate>
+                <div class="rz-donut-content w-100">
+                    <RadzenText TextStyle="TextStyle.H6" Style="color:var(--rz-primary-light);">Modificado</RadzenText>                        
+                    <RadzenBadge BadgeStyle="BadgeStyle.Primary" Shade="Shade.Lighter" class="price-badge" Text=@($"${totalModificado.ToString("N2", new System.Globalization.CultureInfo("en-US"))}") />
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-lg-6 offset-lg-3 my-5">
-
-            <RadzenChart>
-                <RadzenDonutSeries Data="@revenue" CategoryProperty="Quarter" ValueProperty="Revenue" Fills="@colores" TotalAngle="180" StartAngle="180">
-                    <ChildContent>
-                        <RadzenSeriesDataLabels Visible="true" />
-                    </ChildContent>
-                    <TitleTemplate>
-                        <div class="rz-donut-content">
-                            <div>$Modificado</div>
-                        </div>
-                    </TitleTemplate>
-                </RadzenDonutSeries>
-            </RadzenChart>
-        </div>
-    </div>
-</div>
-
-
-@*Listas*@                                       
-<RadzenDataList AllowVirtualization="@allowVirtual" WrapItems="@(!allowVirtual)" AllowPaging="@(!allowVirtual)" IsLoading="@isLoading" LoadData="@LoadData"
-                Data="@UnidadesPresupuestos" Count="@count" TItem="UnidadesPresupuesto" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
-    <Template Context="UnidadesPresupuestos">
-        <RadzenCard Style="width: 100%; padding: 0;">
-        <RadzenRow Gap="0">
-            @*Elementos*@
-                        @*Primer Columna*@
-                <RadzenColumn Size="12" SizeLG="2" Class="rz-p-4 product-title">
-                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="rz-color-white" >@(UnidadesPresupuestos.Cve_Rubro_Ingreso)</RadzenText>
-                </RadzenColumn>
-                @*Segunda Columna*@
-                <RadzenColumn Size="12" SizeLG="8" Class="rz-p-4">
-                    <RadzenRow Gap="1">
-                        <RadzenColumn Size="12" SizeMD="3" SizeLG="3">
-                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Modificado</RadzenText>
-                            
-                            <RadzenBadge BadgeStyle="BadgeStyle.Primary" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.imp_Modificado)}") />
+                </div>
+                        </TitleTemplate>
+                    </RadzenDonutSeries>
+                </RadzenChart>
+   
+            </div>
+    
+@*Listas*@         
+<div class="row col-12">
+    <div class="col-10 mx-auto"> 
+        <RadzenDataList AllowVirtualization="@allowVirtual" WrapItems="@(!allowVirtual)" AllowPaging="@(!allowVirtual)" IsLoading="@isLoading" LoadData="@LoadData"
+                        Data="@UnidadesPresupuestos" Count="@count" TItem="UnidadesPresupuesto" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+            <Template Context="UnidadesPresupuestos">
+                <RadzenCard Style="width: 100%; padding: 0;">
+                <RadzenRow Gap="0">
+                    @*Elementos*@
+                                @*Primer Columna*@
+                        <RadzenColumn Size="12" SizeLG="2" Class="rz-p-4 product-title">
+                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="rz-color-white" >@(UnidadesPresupuestos.Cve_Rubro_Ingreso)</RadzenText>
                         </RadzenColumn>
-                        <RadzenColumn Size="12" SizeMD="3" SizeLG="3">
-                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Ingresos(Desde la tabla ingresos)</RadzenText>
-                            <RadzenBadge BadgeStyle="BadgeStyle.Success" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.Egreso_Imp_aprobado)}") />
+                        @*Segunda Columna*@
+                        <RadzenColumn Size="12" SizeLG="8" Class="rz-p-4">
+                            <RadzenRow Gap="1">
+                                <RadzenColumn Size="12" SizeMD="3" SizeLG="3">
+                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Modificado</RadzenText>
                             
-                        </RadzenColumn>
-                        <RadzenColumn Size="12" SizeMD="3" SizeLG="3">
-                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Gastado</RadzenText>
+                                    <RadzenBadge BadgeStyle="BadgeStyle.Primary" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.imp_Modificado)}") />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="3" SizeLG="3">
+                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Ingresos</RadzenText>
+                                    <RadzenBadge BadgeStyle="BadgeStyle.Success" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.Ejecutado)}") />
                             
-                            <RadzenBadge BadgeStyle="BadgeStyle.Light" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.Imp_Comp_Dev_Eje_Pagado)}") />
-                        </RadzenColumn>
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="3" SizeLG="3">
+                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Gastado</RadzenText>
+                            
+                                    <RadzenBadge BadgeStyle="BadgeStyle.Light" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.Imp_Comp_Dev_Eje_Pagado)}") />
+                                </RadzenColumn>
 
         
-                    </RadzenRow>
-                </RadzenColumn>
-                @*Tercer Columna*@
-                <RadzenColumn Size="12" SizeLG="2" Class="rz-p-4">
-                    <RadzenButton Text="Ver detalles" Style="width: 100%" />
-                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenColumn>
+                        @*Tercer Columna*@
+                        <RadzenColumn Size="12" SizeLG="2" Class="rz-p-4">
+                            <RadzenButton Text="Ver detalles" Style="width: 100%" />
+                        </RadzenColumn>
                    
                 
                     
-        </RadzenRow>
+                </RadzenRow>
 
-        </RadzenCard>
-    </Template>
+                </RadzenCard>
+            </Template>
 
-</RadzenDataList>
-
-
+        </RadzenDataList>
+    </div>
+</div>
 
 <style>
 .product-title {
@@ -97,21 +101,49 @@
     bool isLoading;
     //Nuemero de elementos
     int count;
+    double totalModificado;
+    static double totalgastado;
+    static double porGastar;
+
+    string[] rubros = new string[] { "01","02","03","04","05"};
+
+    private PresupuestoMain<UnidadesPresupuesto> consultaPresupuesto = new PresupuestoMain<UnidadesPresupuesto>();
+
+    private ControlApiDBEgreso<UnidadesPresupuesto> TotalRubro = new ControlApiDBEgreso<UnidadesPresupuesto>();
     //Lista enumerada
     IEnumerable<UnidadesPresupuesto> UnidadesPresupuestos;
+
     async Task LoadData()
     {
-        List<UnidadesPresupuesto> listas = new List<UnidadesPresupuesto>
+        var lista = await TotalRubro.AcumuladoUnidad();
+
+        foreach (var item in lista)
         {
-            new UnidadesPresupuesto{Cve_Rubro_Ingreso = "020",imp_Modificado= 20000020, Imp_Comp_Dev_Eje_Pagado = 100, Egreso_Imp_aprobado = 1000},
-            new UnidadesPresupuesto{Cve_Rubro_Ingreso = "020",imp_Modificado= 20000020, Imp_Comp_Dev_Eje_Pagado = 100, Egreso_Imp_aprobado = 1000},
-            new UnidadesPresupuesto{Cve_Rubro_Ingreso = "020",imp_Modificado= 20000020, Imp_Comp_Dev_Eje_Pagado = 100, Egreso_Imp_aprobado = 1000}
-        };
-        UnidadesPresupuestos = listas as IEnumerable<UnidadesPresupuesto>;
-        count = listas.Count;
+            item.Ejecutado = await consultaPresupuesto.IngresoUnidad(item.Cve_Rubro_Ingreso);
+            item.Cve_Rubro_Ingreso = RubroText(item.Cve_Rubro_Ingreso);
+            
+            Debug.WriteLine(item.Cve_Rubro_Ingreso);
+
+        }
+
+        UnidadesPresupuestos = lista as IEnumerable<UnidadesPresupuesto>;
+        count = lista.Count;
         isLoading = false;
 
 
+    }
+    string? RubroText(string rubrosCve)
+    {
+        Dictionary<string, string> Rubrotext = new Dictionary<string, string>
+        {
+         {"01","Sitema DIF"},
+         {"02","Junta de Asistencia" },
+        {"03","Hospital del Niño"},
+        {"04","CRIH"},
+        { "05",  "Procuraduría"}
+
+        };
+        return Rubrotext[rubrosCve];
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -119,15 +151,38 @@
         {
 
             await LoadData();
+            totalModificado = await TotalColumna("imp_Modificado") ?? 0;
+            totalgastado = await TotalColumna("Imp_Comp_Dev_Eje_Pagado") ?? 0;
+            Regla();
+
         }
     }
+    //Total acumulado de todos los rubros, por columna
+    async Task<double?> TotalColumna(string columna)    
+    {
+        double? suma = 0;
+        foreach (var item in rubros)
+        {
+            suma += await consultaPresupuesto.UnTotal(item,columna);
+        }
+        return suma;
+    }
 
-}
+    DataItem[] revenue;
+    void Regla()
+    {
 
+        porGastar = totalModificado - totalgastado;
 
- 
+        totalgastado = Convert.ToDouble(totalgastado.ToString("N2"));
+        porGastar =    Convert.ToDouble(porGastar.ToString("N2"));
 
-@code {
+        revenue = new DataItem[]
+        {
+         new DataItem{Quarter = "Gastado",Revenue = totalgastado,Title = "jaj"},  
+         new DataItem{Quarter = "Por Gastar", Revenue = porGastar,Title = "joj"}
+        };
+    }
 
     bool showDataLabels = false;
 
@@ -135,26 +190,30 @@
     {
         public string Quarter { get; set; }
         public double Revenue { get; set; }
+        public string Title { get; set; }
+
 
     }
-    
+
     IEnumerable<string> colores = new string[] { "#36a2eb", "#939393" };
-    DataItem[] revenue = new DataItem[] {
-    new DataItem
-    {
-    Quarter = "Gastado",
-    Revenue = 300000,
-    
-    },
-    new DataItem
-    {
-    Quarter = "Por Gastar",
-    Revenue = 100000
-    },
-    };
 
+    public  string TipoGasto(string tipo)
+    {
+        
+        switch (tipo)
+        {
+            case "imp_Modificado":
+                return "Modificado";
+            case "Imp_Comp_Dev_Eje_Pagado":
+                return "Egreso";
 
-    private ConsultaGeneral<UnidadesPresupuesto> consultaGeneral = new ConsultaGeneral<UnidadesPresupuesto>();
+            case "Egreso_Imp_aprobado":
+                return "Aprobado";
+            default:
+                return "--";
+        }
+
+    }
 
 
 } 

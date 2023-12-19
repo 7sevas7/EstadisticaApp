@@ -1,6 +1,9 @@
 ﻿using EstadisticaApp.DataAcces.Interfaces;
 using EstadisticaApp.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Linq.Expressions;
 
 
 namespace EstadisticaApp.DataAcces.Implement
@@ -61,6 +64,7 @@ namespace EstadisticaApp.DataAcces.Implement
         //}
 
         List<string> Rubros = new List<string> { "01", "02", "03", "04", "05" };
+        
 
     }
 }

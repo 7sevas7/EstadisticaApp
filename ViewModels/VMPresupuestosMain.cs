@@ -62,11 +62,7 @@ namespace EstadisticaApp.ViewModels
                 AcumuladoIngresoUnidad = await controlPresupuestos.AcumuladoIngresos();//>>>>>>>>Este solo de las
             //    //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
                ListaPresupuesto = await controlPresupuestos.AcumuladoUnidad();
-            
-          
-           
 
-        
         }
         //Esta lista es la suma por mes de cada tipo de Egreso , Egreso_Imp_aprobado, egreso_Imp_Ampliacion etc, regresara de a cuerdo al tipo que se de como argumento
         //El argumento es el nombre de la columna, 

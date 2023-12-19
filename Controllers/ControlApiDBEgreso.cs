@@ -23,7 +23,7 @@ namespace EstadisticaApp.Controllers
 
         }
         //Datos para graficas
-        public async Task<List<UnidadesPresupuesto?>> AcumuladoUnidad() => await presupuestoMain.AcumuladoUnidad();
+        public async Task<List<UnidadesPresupuesto?>> AcumuladoUnidad() => await presupuestoMain.Get();
         //Datos de manera general
         public async Task<List<double?>> AcumuladoIngresos() => await presupuestoMain.AcumuladoIngresos();
 
@@ -68,6 +68,13 @@ namespace EstadisticaApp.Controllers
             }
             timeMeasure.Stop();
             Debug.WriteLine("Llamado de api min:>>>>>>" + timeMeasure.Elapsed.TotalSeconds / 60 + "<<<<=Secgundos");
+        }
+        
+        //Tal vez se ocuape más adelante 
+        public async Task<List<double?>> EgresoUnidadData(string tipo)
+        {
+            var acumulado = await AcumuladoUnidad();
+            return acumulado.Select(u => (double?)typeof(TT).GetProperty(tipo).GetValue(u)).ToList();
         }
 
     }

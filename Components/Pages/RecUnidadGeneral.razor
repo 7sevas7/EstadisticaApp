@@ -17,7 +17,7 @@
         @*Body*@
     </Div>
 
-    <Div Class="col-lg-4 col-md-4 col-sm-3 col-xs-3   d-flex justify-content-end p-1 m-0" Margin="Blazorise.Margin.Is3.FromTop" >
+    <Div Class="col-lg-4 col-md-4 col-sm-3 col-xs-3   d-flex justify-content-end flex-column p-1  m-0" Margin="Blazorise.Margin.Is3.FromTop" >
         @*Este bar sera un componente*@
         <Button Color="Color.Primary" Outline Clicked="@((rr)=>ShowDialogUpdateTable())">
              <Icon Name="IconName.SyncAlt" TextColor="TextColor.Dark" IconSize="IconSize.Large" />
@@ -49,17 +49,18 @@
 
         if (firstRender)
         {
-            componentEvents.EventoState(this, new ServiceTitle { State = "Rescaudo por Unidad Presupuestal" });
+            componentEvents.EventoState(this, new ServiceTitle { State = "Recaudo por Unidad Presupuestal" });
             var count = await ViewModel.Gets();
             if (count.Count > 0)
             {
+
                 unidades = await ViewModel.SumaUnidadesIngreso();//habra que modificar la consulta
                                                                  //await ViewModel.Guardar();
                 await HandleRedraw();
             }
             else
             {
-
+                ViewModel.borrandoT = false;
                 await ViewModel.Reload();
                 unidades = await ViewModel.SumaUnidadesIngreso();//habra que modificar la consulta
                 await HandleRedraw();
@@ -120,6 +121,7 @@
         //BusyDialog();
         try
         {
+            ViewModel.borrandoT = true;
             await ViewModel.Reload();
             unidades = await ViewModel.SumaUnidadesIngreso();
 

@@ -45,16 +45,16 @@ namespace EstadisticaApp.DataAcces.Implement
         public async Task<UnidadesPresupuesto>? UnidadMes(string rubro, int? mes)
         {
             UnidadesPresupuesto? presupuestoMes = await __context.UnidadesPresupuesto
-              .Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro && u.Num_Mes == mes)
+              .Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2).Contains(rubro) && u.Num_Mes == mes)
               .Select(pre => new UnidadesPresupuesto
               {
                   Cve_Rubro_Ingreso = pre.Cve_Rubro_Ingreso,
                   Num_Mes = pre.Num_Mes,
-                  Egreso_Imp_aprobado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro && u.Num_Mes == mes).Sum(u => u.Egreso_Imp_aprobado),
-                  egreso_Imp_Ampliacion = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro && u.Num_Mes == mes).Sum(u => u.egreso_Imp_Ampliacion),
-                  Egreso_Imp_Reduccion = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro && u.Num_Mes == mes).Sum(u => u.Egreso_Imp_Reduccion),
-                  imp_Modificado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro && u.Num_Mes == mes).Sum(u => u.imp_Modificado),
-                  Imp_Comp_Dev_Eje_Pagado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2) == rubro && u.Num_Mes == mes).Sum(u => u.Imp_Comp_Dev_Eje_Pagado)
+                  Egreso_Imp_aprobado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2).Contains(rubro) && u.Num_Mes == mes).Sum(u => u.Egreso_Imp_aprobado),
+                  egreso_Imp_Ampliacion = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2).Contains(rubro) && u.Num_Mes == mes).Sum(u => u.egreso_Imp_Ampliacion),
+                  Egreso_Imp_Reduccion = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2).Contains(rubro) && u.Num_Mes == mes).Sum(u => u.Egreso_Imp_Reduccion),
+                  imp_Modificado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2).Contains(rubro) && u.Num_Mes == mes).Sum(u => u.imp_Modificado),
+                  Imp_Comp_Dev_Eje_Pagado = __context.UnidadesPresupuesto.Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2).Contains(rubro) && u.Num_Mes == mes).Sum(u => u.Imp_Comp_Dev_Eje_Pagado)
               })
               .FirstOrDefaultAsync();//Añadir ciclo mes !!
             var count = __context.UnidadesPresupuesto.Count();

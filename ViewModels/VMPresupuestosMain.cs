@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-
 using EstadisticaApp.ConfigViewModel.Config;
 using EstadisticaApp.Controllers;
-using EstadisticaApp.DataAcces.Implement;
 using EstadisticaApp.Models;
 using System.Diagnostics;
 
@@ -34,36 +32,45 @@ namespace EstadisticaApp.ViewModels
 
         //Meses letras 
         [ObservableProperty]
-        public string[] meses;
+        public string[] meses = { };
 
         [ObservableProperty]
         public List<double?> acumuladoIngresoUnidad = new();
       
         [ObservableProperty]
         public bool observerender = false;
-
+        public bool borrandoT { set; get; } = false;
         //Recarga de datos 
         public async Task Reload() {
-            await controlPresupuestos.ClearTable();
-            await controlPresupuestos.VerificarData();
-            var vacio = controlPresupuestos.BoolCount;
-            
-        }
-        
-
-        public override async Task Loaded()
-        {
+            Debug.WriteLine("Entra a reload");
+            controlPresupuestos.borrarT = borrandoT;
             //Para correjir errores
             await controlPresupuestos.VerificarData();
 
             Observerender = controlPresupuestos.BoolCount;
-            
-            //    Meses = await presupuestos.Meses();
-                AcumuladoIngresoUnidad = await controlPresupuestos.AcumuladoIngresos();//>>>>>>>>Este solo de las
-            //    //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
-               ListaPresupuesto = await controlPresupuestos.AcumuladoUnidad();
+
+            Meses = await controlPresupuestos.Meses();
+            AcumuladoIngresoUnidad = await controlPresupuestos.AcumuladoIngresos();//>>>>>>>>Este solo de las
+                                                                                   //    //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
+            ListaPresupuesto = await controlPresupuestos.AcumuladoUnidad();
 
         }
+        
+
+        //public override async Task Loaded()
+        //{
+        //    Debug.WriteLine("Entra a reload");
+        //    //Para correjir errores
+        //    await controlPresupuestos.VerificarData();
+
+        //    Observerender = controlPresupuestos.BoolCount;
+
+        //    Meses = await controlPresupuestos.Meses();
+        //    AcumuladoIngresoUnidad = await controlPresupuestos.AcumuladoIngresos();//>>>>>>>>Este solo de las
+        //                                                                           //    //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
+        //    ListaPresupuesto = await controlPresupuestos.AcumuladoUnidad();
+
+        //}
         //Esta lista es la suma por mes de cada tipo de Egreso , Egreso_Imp_aprobado, egreso_Imp_Ampliacion etc, regresara de a cuerdo al tipo que se de como argumento
         //El argumento es el nombre de la columna, 
         public  List<double?> EgresoMes(string tipo)
@@ -111,10 +118,7 @@ namespace EstadisticaApp.ViewModels
         }
 
         //Se borraran los dato, para evitar información con mala consistencia 
-        public async Task ClearTable() {
-            Debug.WriteLine("Se borra");
-            await controlPresupuestos.ClearTable();
-        }
+      
 
 
 

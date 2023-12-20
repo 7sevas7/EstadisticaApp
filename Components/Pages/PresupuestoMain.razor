@@ -17,14 +17,17 @@
 
 
 
-@if (!ViewModel.Observerender)
+@if (true)
 {
     <Div Class="row" Style="width:100vw;height:100%;">
 
        <Div Class="col-1"></Div>
         <Div Class="col-lg-10 col-md-12 col-sm-12 col-xs-12 pt-2  mb-3" >
             <h4>Presupuesto Acumulado por unidad</h4>
-
+            <Button Color="Color.Primary" Outline Clicked="@((rr)=>ShowDialogUpdateTable())">
+                 <Icon Name="IconName.SyncAlt" TextColor="TextColor.Dark" IconSize="IconSize.Large" />
+                 <p>14/12/2023(Ultima Actualización)</p>
+             </Button>
             <Chart @ref="chart" TItem="double?" Type="ChartType.Line" >
                 <ChartTrendline @ref="chartTrendline" TItem="double?" />
             </Chart>
@@ -63,6 +66,7 @@ else
 }
 
 @code{
+    bool seVe = false;
     [Inject]
     private ComponentEvents componentEvents{ set; get; }
 
@@ -94,12 +98,19 @@ else
             //Dependera que si se puede verificar si no pues negarlo
             if (vacio)
             {
-                await ViewModel.Reload();
+                seVe = true;
                 await HandleRedraw();
+
 
             }
             else
             {
+                BusyDialog();
+                ViewModel.borrandoT = false;
+                await ViewModel.Reload();
+                
+                
+                DialogService.Close();
                 await HandleRedraw();
             }
 
@@ -109,7 +120,7 @@ else
     async Task HandleRedraw()
     {
 
-        if (chart != null && !ViewModel.Observerender)
+        if (chart != null )
         {
             await chart.Clear();
             await chart.AddLabels(ViewModel.ListaUnidades);
@@ -160,11 +171,13 @@ else
         BusyDialog();
 
         //Borrando la base datos para despues actualizar 
-            EstateLoader = "Borrando datos locales....";
-            await ViewModel.ClearTable();
+            
+            
             EstateLoader = "Cargando Nuevos Datos....";
-            await ViewModel.Loaded();
+            ViewModel.borrandoT = true;
+            await ViewModel.Reload();
             ViewModel.Observerender = false;
+           await HandleRedraw();
         DialogService.Close();
         
 

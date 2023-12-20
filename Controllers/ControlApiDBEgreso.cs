@@ -13,8 +13,12 @@ namespace EstadisticaApp.Controllers
         
         private readonly ConsultaGeneral<TT> __context;
         
+        public bool borrarT { set; get; }
+
         private ApiRes<TT> apiRes;
         public bool BoolCount { set; get; } = false;
+
+
         public ControlApiDBEgreso()
         {
             apiRes = new ApiRes<TT>();
@@ -30,19 +34,29 @@ namespace EstadisticaApp.Controllers
         //Datos pormes y rubro
         public async Task<List<UnidadesPresupuesto>>? UnidadXMeses(string rubro) => await presupuestoMain.UnidadXMeses(rubro);
 
-        public async Task ClearTable() => await __context.ClearTAble();
+        
         public async Task VerificarData()
         {
+            if (borrarT)
+            {
+                await __context.ClearTAble();
+            }
+
             BoolCount = __context.BoolCount();
 
             Stopwatch timeMeasure = new Stopwatch();
             //Falta claseGeneral
             string[] rubros = { "01", "02", "03", "04", "05" };
+            Debug.WriteLine("Entra con click");
+            //Esta mal el manejo de errores 
 
+               // await __context.ClearTAble();
+            
             timeMeasure.Start();
 
             if (BoolCount)
             {
+
                 foreach (var item in rubros)
                 {
 
@@ -50,10 +64,12 @@ namespace EstadisticaApp.Controllers
                     Debug.WriteLine("Entra A la petición");
                     try
                     {
+                        
                         //Viene desde 
                         var presupuestoApi = await apiRes.GetsList("Egresos", item);
+                        
                         Debug.WriteLine("Contador>>" + presupuestoApi.Count);
-
+                        
                         await __context.Insert(presupuestoApi);
 
                         await Task.CompletedTask;
@@ -77,5 +93,6 @@ namespace EstadisticaApp.Controllers
             return acumulado.Select(u => (double?)typeof(TT).GetProperty(tipo).GetValue(u)).ToList();
         }
 
+        public async Task<string[]> Meses() => await presupuestoMain.Meses();
     }
 }

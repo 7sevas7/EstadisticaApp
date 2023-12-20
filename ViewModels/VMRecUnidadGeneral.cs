@@ -10,6 +10,7 @@ namespace EstadisticaApp.Components.Pages
 {
     public partial class VMRecUnidadGeneral : VMBase
     {
+        public bool borrandoT = false;
 
         ControlApiDBIngreso<UnidadesIngresos> controlApiDBIngreso = new ControlApiDBIngreso<UnidadesIngresos>();
 
@@ -25,25 +26,8 @@ namespace EstadisticaApp.Components.Pages
         public async Task Reload() {
             Debug.WriteLine("Se recarga");
             //Verificar primero la conexión
-
-            await controlApiDBIngreso.ClearTable();
-            
+            controlApiDBIngreso.borrarT = borrandoT;
             await controlApiDBIngreso.VerificarData();            
-            var vacio = controlApiDBIngreso.BoolCount;
-            
-            if (vacio) {
-
-                Debug.WriteLine("Correcto");
-            }
-            else
-            {
-                Debug.WriteLine("No crrectt");
-            }
-
-            
-           
-        
-        
         }
 
         [RelayCommand]

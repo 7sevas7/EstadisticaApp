@@ -19,7 +19,7 @@ namespace EstadisticaApp.Controllers
 
         private ApiRes<TT> apiRes;
 
-        
+        public bool borrarT { set; get; }
 
         public ControlApiDBIngreso()
         {
@@ -37,19 +37,21 @@ namespace EstadisticaApp.Controllers
         public async Task<List<TT>> Getss() => await __context.Get();
         public async Task VerificarData()
         {
+            if (borrarT) {
+                await __context.ClearTAble();
+            }
+
             BoolCount = __context.BoolCount();   
             
             Stopwatch timeMeasure = new Stopwatch();
             //Falta claseGeneral
             string[] rubros = { "01","02","03","04","05"};
-            
+            Debug.WriteLine("<>>>>>>>>>>"+BoolCount);
             timeMeasure.Start();
             
             if (BoolCount)
             {
-                foreach (var item in rubros){                
-                
-                            
+                foreach (var item in rubros){                                            
                     Debug.WriteLine("Entra A la petición");
                     try
                     {
@@ -65,12 +67,10 @@ namespace EstadisticaApp.Controllers
                     {
                         throw new Exception(ex.ToString());
                     }
-
                 }
-                
             }
             timeMeasure.Stop();
-            Debug.WriteLine("Llamado de api min:>>>>>>"+timeMeasure.Elapsed.TotalSeconds + "<<<<=Segundos");
+            Debug.WriteLine("Llamado de api min:>>>>>>"+timeMeasure.Elapsed.TotalMinutes + "<<<<=Segundos");
         }
         public async Task ClearTable() => await __context.ClearTAble();
         //public async Task<List<double>> UnidadSuma() => await UnidadSuma();

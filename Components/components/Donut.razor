@@ -4,75 +4,75 @@
 @using EstadisticaApp.Models
 @using Radzen
 @using Radzen.Blazor
-
-@using Microsoft.EntityFrameworkCore
 @using System.Diagnostics
 
+@inject NavigationManager Navigation
 
 
     
-        
-            <div class="col-sm-12 col-lg-12 offset-lg-12 mt-3">
-                <RadzenChart >
-                    <RadzenDonutSeries Data="@revenue" Title="Title" CategoryProperty="Quarter" ValueProperty="Revenue" InnerRadius="100"  Radius="120" Fills="@colores" TotalAngle="180"  StartAngle="180">
-                        <ChildContent>
-                        <RadzenMarkers MarkerType="MarkerType.Circle" />
-                            <RadzenSeriesDataLabels Visible="true" OffsetY="-20" />
-                        </ChildContent>
-                        <TitleTemplate>
-                <div class="rz-donut-content w-100">
-                    <RadzenText TextStyle="TextStyle.H6" Style="color:var(--rz-primary-light);">Modificado</RadzenText>                        
-                    <RadzenBadge BadgeStyle="BadgeStyle.Primary" Shade="Shade.Lighter" class="price-badge" Text=@($"${totalModificado.ToString("N2", new System.Globalization.CultureInfo("en-US"))}") />
+<div class="col-12 mt-3">        
+    <RadzenText TextStyle="TextStyle.H3">Presupuesto, Gasto y Recaudo Acumulado</RadzenText>
+</div>
 
-                </div>
-                        </TitleTemplate>
-                    </RadzenDonutSeries>
-                </RadzenChart>
-   
-            </div>
+<div class="col-sm-12 col-lg-12 offset-lg-12">    
+    <RadzenChart >        
+        <RadzenLegend Position="LegendPosition.Bottom" />
+        <RadzenDonutSeries Data="@revenue" Title="Title" CategoryProperty="Quarter" ValueProperty="Revenue" InnerRadius="230" Radius="280" Y="300" Fills="@colores" TotalAngle="180" StartAngle="180">
+            
+            <ChildContent>
+            <RadzenMarkers MarkerType="MarkerType.Circle" />
+                <RadzenSeriesDataLabels Visible="true"  />
+            </ChildContent>
+            <TitleTemplate>
+    <div class="rz-donut-content w-75 mx-auto" style="transform:translateY(-100px); ">
+        <RadzenText TextStyle="TextStyle.H6" Style="color:var(--rz-primary-light);">Modificado</RadzenText>                        
+        <RadzenBadge BadgeStyle="BadgeStyle.Primary" Shade="Shade.Lighter" class="price-badge" Text=@($"${totalModificado.ToString("N2", new System.Globalization.CultureInfo("en-US"))}") />
+
+    </div>
+            </TitleTemplate>
+        </RadzenDonutSeries>
+    </RadzenChart>   
+</div>
     
 @*Listas*@         
 <div class="row col-12">
-    <div class="col-10 mx-auto"> 
+    <div class="col-11 mx-auto"> 
         <RadzenDataList AllowVirtualization="@allowVirtual" WrapItems="@(!allowVirtual)" AllowPaging="@(!allowVirtual)" IsLoading="@isLoading" LoadData="@LoadData"
                         Data="@UnidadesPresupuestos" Count="@count" TItem="UnidadesPresupuesto" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
             <Template Context="UnidadesPresupuestos">
                 <RadzenCard Style="width: 100%; padding: 0;">
                 <RadzenRow Gap="0">
                     @*Elementos*@
-                                @*Primer Columna*@
-                        <RadzenColumn Size="12" SizeLG="2" Class="rz-p-4 product-title">
-                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="rz-color-white" >@(UnidadesPresupuestos.Cve_Rubro_Ingreso)</RadzenText>
+
+                        @*Primer Columna*@
+                        <RadzenColumn Size="12" SizeLG="2" Class="rz-p-4 product-title ">
+                            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="rz-color-white" >@(RubroText(UnidadesPresupuestos.Cve_Rubro_Ingreso))</RadzenText>
                         </RadzenColumn>
+
                         @*Segunda Columna*@
-                        <RadzenColumn Size="12" SizeLG="8" Class="rz-p-4">
+                        <RadzenColumn Size="12" SizeLG="8"  Class="rz-p-4">
                             <RadzenRow Gap="1">
-                                <RadzenColumn Size="12" SizeMD="3" SizeLG="3">
-                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Modificado</RadzenText>
-                            
+                                <RadzenColumn Size="12" SizeXS="6" SizeMD="4" SizeLG="4" Class="rz-mb-2">
+                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5">Modificado</RadzenText>                            
                                     <RadzenBadge BadgeStyle="BadgeStyle.Primary" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.imp_Modificado)}") />
                                 </RadzenColumn>
-                                <RadzenColumn Size="12" SizeMD="3" SizeLG="3">
-                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Ingresos</RadzenText>
+                                <RadzenColumn Size="12" SizeXS="6" SizeMD="4" SizeLG="4">
+                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-2">Recaudado</RadzenText>
                                     <RadzenBadge BadgeStyle="BadgeStyle.Success" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.Ejecutado)}") />
                             
                                 </RadzenColumn>
-                                <RadzenColumn Size="12" SizeMD="3" SizeLG="3">
-                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Gastado</RadzenText>
+                                <RadzenColumn Size="12" SizeXS="6" SizeMD="4" SizeLG="4">
+                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-2">Gastado</RadzenText>
                             
                                     <RadzenBadge BadgeStyle="BadgeStyle.Light" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.Imp_Comp_Dev_Eje_Pagado)}") />
-                                </RadzenColumn>
-
-        
+                                </RadzenColumn>        
                             </RadzenRow>
                         </RadzenColumn>
+                        
                         @*Tercer Columna*@
-                        <RadzenColumn Size="12" SizeLG="2" Class="rz-p-4">
-                            <RadzenButton Text="Ver detalles" Style="width: 100%" />
-                        </RadzenColumn>
-                   
-                
-                    
+                        <RadzenColumn Size="12"  SizeLG="2" SizeMD="12" SizeXS="12" Class="rz-p-4">
+                            <RadzenButton Class="w-100" Text="Ver detalles" Click=@(()=>Navigation.NavigateTo($"/presupuesto/{UnidadesPresupuestos.Cve_Rubro_Ingreso}")) />
+                        </RadzenColumn>                   
                 </RadzenRow>
 
                 </RadzenCard>
@@ -97,6 +97,7 @@
 </style>
 
 @code {
+
     bool allowVirtual;
     bool isLoading;
     //Nuemero de elementos
@@ -119,8 +120,9 @@
 
         foreach (var item in lista)
         {
+            
             item.Ejecutado = await consultaPresupuesto.IngresoUnidad(item.Cve_Rubro_Ingreso);
-            item.Cve_Rubro_Ingreso = RubroText(item.Cve_Rubro_Ingreso);
+            //item.Cve_Rubro_Ingreso = RubroText(item.Cve_Rubro_Ingreso);
             
             Debug.WriteLine(item.Cve_Rubro_Ingreso);
 
@@ -136,7 +138,7 @@
     {
         Dictionary<string, string> Rubrotext = new Dictionary<string, string>
         {
-         {"01","Sitema DIF"},
+         {"01","Sistema DIF"},
          {"02","Junta de Asistencia" },
         {"03","Hospital del Niño"},
         {"04","CRIH"},

@@ -16,7 +16,7 @@ namespace EstadisticaApp.Controllers
         public bool borrarT { set; get; }
 
         private ApiRes<TT> apiRes;
-        public bool BoolCount { set; get; } = false;
+        //public bool BoolCount { set; get; } = false;
 
 
         public ControlApiDBEgreso()
@@ -42,7 +42,7 @@ namespace EstadisticaApp.Controllers
                 await __context.ClearTAble();
             }
 
-            BoolCount = __context.BoolCount();
+           // BoolCount = __context.BoolCount();
 
             Stopwatch timeMeasure = new Stopwatch();
             //Falta claseGeneral
@@ -54,8 +54,8 @@ namespace EstadisticaApp.Controllers
             
             timeMeasure.Start();
 
-            if (BoolCount)
-            {
+           // if (BoolCount)
+            //{
 
                 foreach (var item in rubros)
                 {
@@ -79,7 +79,7 @@ namespace EstadisticaApp.Controllers
                         throw new Exception(ex.ToString());
                     }
 
-                }
+              //  }
 
             }
             timeMeasure.Stop();
@@ -92,7 +92,53 @@ namespace EstadisticaApp.Controllers
             var acumulado = await AcumuladoUnidad();
             return acumulado.Select(u => (double?)typeof(TT).GetProperty(tipo).GetValue(u)).ToList();
         }
+        public async Task insertApi()
+        {
 
+            Stopwatch timeMeasure = new Stopwatch();
+            //Falta claseGeneral
+            string[] rubros = { "01", "02", "03", "04", "05" };
+
+
+            foreach (var item in rubros)
+            {
+                Debug.WriteLine("Entra A la petición");
+                try
+                {
+                    //Viene desde 
+                    var presupuestoApi = await apiRes.GetsList("Ingresos", item);
+                    Debug.WriteLine("Contador>>" + presupuestoApi.Count);
+
+                    await __context.Insert(presupuestoApi);
+
+
+                }
+                catch (Exception ex)
+                {
+                    //Verficar el error al insertar
+                    throw new Exception(ex.Message);
+                }
+            }
+        }
+        public async Task Verificar()
+        {
+            //Verficar que se quiere hacer en caso que se quiera borrar 
+            //Verficar la conexion 
+            if (borrarT)
+            {
+                var conexion = apiRes.verificar();
+                if (conexion)
+                {
+                    await __context.ClearTAble();
+                    await insertApi();
+                }
+                else
+                {
+                    throw new Exception("Error de conexión");
+                }
+            }
+
+        }
         public async Task<string[]> Meses() => await presupuestoMain.Meses();
     }
 }

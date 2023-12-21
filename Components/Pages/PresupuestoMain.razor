@@ -9,6 +9,7 @@
 @using EstadisticaApp.Components.components
 @using Radzen
 @using Radzen.Blazor
+@using System.Diagnostics
 
 @inherits CreateViewModel<VMPresupuestosMain>
 @inject NavigationManager Navigation
@@ -94,25 +95,25 @@ else
         if (firstRender)
         {
             //sE ARA CON LOS DATOS PARA MOSTRASR 
-            var vacio = ViewModel.Observerender;
+            //var vacio = ViewModel.Observerender;
             //Dependera que si se puede verificar si no pues negarlo
-            if (vacio)
-            {
-                seVe = true;
-                await HandleRedraw();
 
-
-            }
-            else
-            {
+            try { 
                 BusyDialog();
                 ViewModel.borrandoT = false;
                 await ViewModel.Reload();
-                
-                
+
+
                 DialogService.Close();
                 await HandleRedraw();
             }
+            catch(Exception ex)
+            {
+                BusyDialog();
+                Debug.WriteLine(ex.Message);
+
+            }
+
 
         }
     }
@@ -163,23 +164,35 @@ else
     List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
     List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };
 
-    
+
 
     async Task ShowDialogUpdateTable(){
 
-
-        BusyDialog();
-
-        //Borrando la base datos para despues actualizar 
-            
-            
+        try
+        {
+            BusyDialog();
+            //Borrando la base datos para despues actualizar 
             EstateLoader = "Cargando Nuevos Datos....";
             ViewModel.borrandoT = true;
             await ViewModel.Reload();
-            ViewModel.Observerender = false;
-           await HandleRedraw();
-        DialogService.Close();
-        
+            //ViewModel.Observerender = false;
+            await HandleRedraw();
+            DialogService.Close();
+        }
+        catch(Exception ex)
+        {
+            EstateLoader = ex.Message;
+            
+            
+             InvokeAsync(async()=>
+            {
+                await Task.Delay(2000);
+                DialogService.Close();
+            ;
+             Debug.WriteLine("Tiempos");
+            });
+            
+        }
 
         
 

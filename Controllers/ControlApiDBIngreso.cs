@@ -4,6 +4,7 @@ using EstadisticaApp.DataAcces.Implement;
 
 using EstadisticaApp.Models;
 using EstadisticaApp.Utilities;
+
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
@@ -38,6 +39,7 @@ namespace EstadisticaApp.Controllers
         public async Task VerificarData()
         {
             if (borrarT) {
+
                 await __context.ClearTAble();
             }
 
@@ -72,7 +74,8 @@ namespace EstadisticaApp.Controllers
             timeMeasure.Stop();
             Debug.WriteLine("Llamado de api min:>>>>>>"+timeMeasure.Elapsed.TotalMinutes + "<<<<=Segundos");
         }
-        public async Task ClearTable() => await __context.ClearTAble();
+        
+        
         //public async Task<List<double>> UnidadSuma() => await UnidadSuma();
 
         //Esta funcion sera asi ya que aun no se soluciona para hacer la consulta de manera mas general

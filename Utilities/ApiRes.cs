@@ -1,7 +1,9 @@
 
 using EstadisticaApp.DataAcces.Implement;
+
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Net;
 
 
 namespace EstadisticaApp.Utilities
@@ -46,14 +48,27 @@ namespace EstadisticaApp.Utilities
                     
                 
             }
-            catch (Exception ex) {
+            catch {
                 
-                Debug.Write("Errror==>"+ex);
+                throw new  Exception("Error directo en la petición Class==> ApiRes");
+                
             }
                 
             return lista;
             
-}
+        }
+
+        public bool verificar()
+        {
+            try {
+                using (var client = new WebClient())
+                using (client.OpenRead(""))
+                    return true;
+            } catch{
+                return false;
+            }
+            
+        } 
 
 
 

@@ -37,23 +37,27 @@ namespace EstadisticaApp.ViewModels
         [ObservableProperty]
         public List<double?> acumuladoIngresoUnidad = new();
       
-        [ObservableProperty]
-        public bool observerender = false;
+        
         public bool borrandoT { set; get; } = false;
         //Recarga de datos 
         public async Task Reload() {
-            Debug.WriteLine("Entra a reload");
-            controlPresupuestos.borrarT = borrandoT;
-            //Para correjir errores
-            await controlPresupuestos.VerificarData();
+            try
+            {
+                Debug.WriteLine("Entra a reload");
+                controlPresupuestos.borrarT = borrandoT;
+                //Para correjir errores
+                await controlPresupuestos.Verificar();
 
-            Observerender = controlPresupuestos.BoolCount;
 
-            Meses = await controlPresupuestos.Meses();
-            AcumuladoIngresoUnidad = await controlPresupuestos.AcumuladoIngresos();//>>>>>>>>Este solo de las
-                                                                                   //    //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
-            ListaPresupuesto = await controlPresupuestos.AcumuladoUnidad();
 
+                Meses = await controlPresupuestos.Meses();
+                AcumuladoIngresoUnidad = await controlPresupuestos.AcumuladoIngresos();//>>>>>>>>Este solo de las
+                                                                                       //    //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
+                ListaPresupuesto = await controlPresupuestos.AcumuladoUnidad();
+            }catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
         
 

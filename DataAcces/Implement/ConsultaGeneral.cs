@@ -48,7 +48,7 @@ namespace EstadisticaApp.DataAcces.Implement
             await __context.Set<TT>().ExecuteDeleteAsync();
         }
         //Verifca conteo de contenido
-        public override bool BoolCount() => __context.Set<TT>().Count() > 0 ? false : true;
+        public override bool BoolCount() => __context.Set<TT>().Count() == 0 ? false : true;
 
         //Suma de recaudado Tabla UndidadPresupuesto >  Por rubro
         //public override async Task<List<double>> UnidadSuma()

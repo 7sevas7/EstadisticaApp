@@ -58,16 +58,10 @@ namespace EstadisticaApp.Utilities
             
         }
 
-        public bool verificar()
+        public async Task<bool> verificar(string tabla)
         {
-            try {
-                using (var client = new WebClient())
-                using (client.OpenRead(""))
-                    return true;
-            } catch{
-                return false;
-            }
-            
+            HttpResponseMessage res = await httpClient.GetAsync($"{tabla}");
+            return res.IsSuccessStatusCode ? true : false;
         } 
 
 

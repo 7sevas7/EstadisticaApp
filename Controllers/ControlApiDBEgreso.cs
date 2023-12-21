@@ -94,19 +94,20 @@ namespace EstadisticaApp.Controllers
         }
         public async Task insertApi()
         {
-
+            //Aqui al manejar errores de no conexion si no de inser o de servidor 
+            // Se podra usar recursividad por n+umero de veces de intento 
             Stopwatch timeMeasure = new Stopwatch();
             //Falta claseGeneral
             string[] rubros = { "01", "02", "03", "04", "05" };
 
-
+            timeMeasure.Start();
             foreach (var item in rubros)
             {
                 Debug.WriteLine("Entra A la petición");
                 try
                 {
                     //Viene desde 
-                    var presupuestoApi = await apiRes.GetsList("Ingresos", item);
+                    var presupuestoApi = await apiRes.GetsList("Egresos", item);
                     Debug.WriteLine("Contador>>" + presupuestoApi.Count);
 
                     await __context.Insert(presupuestoApi);
@@ -116,17 +117,21 @@ namespace EstadisticaApp.Controllers
                 catch (Exception ex)
                 {
                     //Verficar el error al insertar
-                    throw new Exception(ex.Message);
+                    throw new Exception("Al insertar=>"+ex);
                 }
             }
+            timeMeasure.Stop();
+            Debug.WriteLine("Llamado de api min:>>>>>>" + timeMeasure.Elapsed.TotalMinutes + "<<<<=Minutos");
+
         }
         public async Task Verificar()
         {
+            
             //Verficar que se quiere hacer en caso que se quiera borrar 
             //Verficar la conexion 
             if (borrarT)
             {
-                var conexion = apiRes.verificar();
+                var conexion = await apiRes.verificar("Egresos");
                 if (conexion)
                 {
                     await __context.ClearTAble();
@@ -135,6 +140,15 @@ namespace EstadisticaApp.Controllers
                 else
                 {
                     throw new Exception("Error de conexión");
+                }
+            }
+            else
+            {
+                var vacio = await __context.Get();
+
+                if (vacio.Count == 0) {
+                    //await __context.ClearTAble();
+                    await insertApi();
                 }
             }
 

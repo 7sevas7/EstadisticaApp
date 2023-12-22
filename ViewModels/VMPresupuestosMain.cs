@@ -48,18 +48,16 @@ namespace EstadisticaApp.ViewModels
                 //Para correjir errores
                 await controlPresupuestos.Verificar();
 
-
-
                 Meses = await controlPresupuestos.Meses();
                 AcumuladoIngresoUnidad = await controlPresupuestos.AcumuladoIngresos();//>>>>>>>>Este solo de las
                                                                                        //    //Funcion la cual devuelve lista por cada rubro con su suma correspondiente 
-                ListaPresupuesto = await controlPresupuestos.AcumuladoUnidad();
+                ListaPresupuesto = await PresupuestoLista();
             }catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-        
+        public async Task<List<UnidadesPresupuesto>> PresupuestoLista()=> await controlPresupuestos.AcumuladoUnidad();
 
         //public override async Task Loaded()
         //{
@@ -110,9 +108,10 @@ namespace EstadisticaApp.ViewModels
             switch (tipo)
             {
                 case "imp_Modificado":
-                    return "Modificado";
+                    return "Modificado (Egreso)";
                 case "Imp_Comp_Dev_Eje_Pagado":
-                    return "Egreso";
+                    return "Ejercido";
+
                 case "Egreso_Imp_aprobado":
                     return "Aprobado";
                 default:

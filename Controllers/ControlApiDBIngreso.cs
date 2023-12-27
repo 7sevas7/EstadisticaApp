@@ -27,7 +27,7 @@ namespace EstadisticaApp.Controllers
             apiRes = new ApiRes<TT>();
             __context = new ConsultaGeneral<TT>();
 
-            contexIn = new DBContext();
+            contexIn = DBContext.Instancia();
 
 
         }
@@ -37,7 +37,7 @@ namespace EstadisticaApp.Controllers
 
         public async Task<List<TT>> Getss() => await __context.Get();
         public async Task VerificarData()
-        {
+       {
             if (borrarT) {
 
                 await __context.ClearTAble();
@@ -51,7 +51,7 @@ namespace EstadisticaApp.Controllers
             Debug.WriteLine("<>>>>>>>>>>"+BoolCount);
             timeMeasure.Start();
             
-            if (BoolCount)
+            if (!BoolCount)
             {
                 foreach (var item in rubros){                                            
                     Debug.WriteLine("Entra A la petición");

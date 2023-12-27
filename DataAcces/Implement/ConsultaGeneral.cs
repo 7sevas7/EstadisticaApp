@@ -13,7 +13,7 @@ namespace EstadisticaApp.DataAcces.Implement
         private DBContext __context;
         public ConsultaGeneral()
         {
-            __context = new DBContext();
+            __context = DBContext.Instancia(); 
 
         }      
         public override async Task<List<TT>> Get()

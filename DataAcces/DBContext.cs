@@ -7,11 +7,21 @@ namespace EstadisticaApp.DataAcces
     public class DBContext : DbContext
     {
         public DbSet<UnidadesIngresos> UnidadesIngreso { set; get; }
-        public DbSet<UnidadesPresupuesto>  UnidadesPresupuesto { set; get; }
+        public DbSet<UnidadesPresupuesto> UnidadesPresupuesto { set; get; }
 
-        public DBContext():base()
+        //Prototipi
+        private  static DBContext contextt;
+
+        public static DBContext Instancia()
         {
-                
+            
+                if (contextt == null) {
+                    contextt = new DBContext();
+
+                } 
+            
+
+            return contextt;
         }
         //Parte de la contiguración de Entity
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -20,8 +20,7 @@ namespace EstadisticaApp.DataAcces.Implement
 
         public PresupuestoMain()
         {
-            __context = new DBContext();
-
+            __context = DBContext.Instancia();
         }
 
       
@@ -117,6 +116,7 @@ namespace EstadisticaApp.DataAcces.Implement
         }
         //Simplemente es la suma para diferenciar con los ingresados/
         //Solo es una consulta para el grafico
+        //Conslta de suma por rubro 
         public async Task<List<double?>> AcumuladoIngresos()
         {
             List<double?> ret = new List<double?>();
@@ -145,9 +145,9 @@ namespace EstadisticaApp.DataAcces.Implement
         }
 
         //Recuerden que es suma por unidad presupuestal 
-        public override async Task<List<T>> Get()
+        public override async Task<List<T?>> Get()
         {
-            List<T> acumulado = new();
+            List<T?> acumulado = new();
             foreach (var item in Rubros)
             {
                 var presupuesto = await __context.Set<T>().Where(u => u.Cve_Rubro_Ingreso.Substring(2, 2).Contains(item))

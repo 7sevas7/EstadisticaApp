@@ -10,11 +10,11 @@
 
 
     
-<div class="col-12 mt-3">        
+<div class="col-11 mt-3 mx-auto">        
     <RadzenText TextStyle="TextStyle.H3">Presupuesto, Gasto y Recaudo Acumulado</RadzenText>
 </div>
 
-<div class="col-sm-12 col-lg-12 offset-lg-12">    
+<div class="col-sm-12 col-lg-12 offset-lg-12">        
     <RadzenChart >        
         <RadzenLegend Position="LegendPosition.Bottom" />
         <RadzenDonutSeries Data="@revenue" Title="Title" CategoryProperty="Quarter" ValueProperty="Revenue" InnerRadius="230" Radius="280" Y="300" Fills="@colores" TotalAngle="180" StartAngle="180">
@@ -62,10 +62,14 @@
                             
                                 </RadzenColumn>
                                 <RadzenColumn Size="12" SizeXS="6" SizeMD="4" SizeLG="4">
-                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-2">Gastado</RadzenText>
-                            
-                                    <RadzenBadge BadgeStyle="BadgeStyle.Light" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.Imp_Comp_Dev_Eje_Pagado)}") />
+                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-2">Ejercido</RadzenText>                            
+                                    <RadzenBadge BadgeStyle="BadgeStyle.Danger" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.Imp_Comp_Dev_Eje_Pagado)}") />
                                 </RadzenColumn>        
+                                <RadzenColumn Size="12" SizeXS="6" SizeMD="4" SizeLG="4">
+                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-2">Por Gastar</RadzenText>                                    
+                                    <RadzenBadge BadgeStyle="BadgeStyle.Light" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", UnidadesPresupuestos.imp_Modificado - UnidadesPresupuestos.Imp_Comp_Dev_Eje_Pagado)}") /> <br/>
+                                    <RadzenText TextStyle="TextStyle.Caption">Modificado - Ejercido(Gastado) </RadzenText>
+                                </RadzenColumn>
                             </RadzenRow>
                         </RadzenColumn>
                         
@@ -120,20 +124,14 @@
 
         foreach (var item in lista)
         {
-            
-            item.Ejecutado = await consultaPresupuesto.IngresoUnidad(item.Cve_Rubro_Ingreso);
-            //item.Cve_Rubro_Ingreso = RubroText(item.Cve_Rubro_Ingreso);
-            
-            Debug.WriteLine(item.Cve_Rubro_Ingreso);
-
+            item.Ejecutado = await consultaPresupuesto.IngresoUnidad(item.Cve_Rubro_Ingreso);            
         }
 
         UnidadesPresupuestos = lista as IEnumerable<UnidadesPresupuesto>;
         count = lista.Count;
         isLoading = false;
-
-
     }
+
     string? RubroText(string rubrosCve)
     {
         Dictionary<string, string> Rubrotext = new Dictionary<string, string>
@@ -197,7 +195,7 @@
 
     }
 
-    IEnumerable<string> colores = new string[] { "#36a2eb", "#939393" };
+    IEnumerable<string> colores = new string[] { "#4340d2", "#939393" };
 
     public  string TipoGasto(string tipo)
     {

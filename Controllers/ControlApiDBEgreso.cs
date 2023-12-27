@@ -15,16 +15,13 @@ namespace EstadisticaApp.Controllers
         
         public bool borrarT { set; get; }
 
-        private ApiRes<TT> apiRes;
-        //public bool BoolCount { set; get; } = false;
-
+        private ApiRes<TT> apiRes;        
 
         public ControlApiDBEgreso()
         {
             apiRes = new ApiRes<TT>();
             __context = new ConsultaGeneral<TT>();
-
-
+            
         }
         //Datos para graficas
         public async Task<List<UnidadesPresupuesto?>> AcumuladoUnidad() => await presupuestoMain.Get();

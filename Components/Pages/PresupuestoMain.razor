@@ -17,146 +17,80 @@
 
 @inject DialogService DialogService
 
- <div class="row">
-        <div class="col-12">
-            <h4>Auto-size bar series</h4>
-            <RadzenChart style="height:100vh;" >
-            <RadzenStackedBarSeries Data="@revenue2020" CategoryProperty="Quarter" Title="Egreso (Modificado)" ValueProperty="Revenue" LineType="LineType.Dashed" Fill="#4caf50">
-                    <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                </RadzenStackedBarSeries>
-            <RadzenStackedBarSeries Data="@revenue2019" CategoryProperty="Quarter" Title="Ejercido" ValueProperty="Revenue" Fill="#4340d2">
-                    <RadzenSeriesDataLabels Visible="@showDataLabels"  />
-                </RadzenStackedBarSeries>
-            <RadzenStackedBarSeries Data="@revenue2021" CategoryProperty="Quarter" Title="Recaudo" ValueProperty="Revenue" Fill="#b3261e">
-                    <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                </RadzenStackedBarSeries>
-               
-                <RadzenBarOptions Radius="5" Margin="30" Height="40" />
-                <RadzenValueAxis Formatter="@FormatAsUSD" >
-                    <RadzenGridLines Visible="true" />
-                    <RadzenAxisTitle Text="Revenue in USD" />
-                </RadzenValueAxis>
+
+
+<div class="row">
+    <div class="col-12">
+            
+        <RadzenChart style="height:150vh;" >
+        <RadzenBarSeries Data="@ViewModel.TotalesDic["modificado"].ToList()" CategoryProperty="Quarter" Title="Egreso (Modificado)" ValueProperty="Revenue" LineType="LineType.Dashed" Fill="#4340d2">
+                <RadzenSeriesDataLabels Visible="@showDataLabels"  />
+            </RadzenBarSeries>
+        <RadzenBarSeries Data="@ViewModel.TotalesDic["ejercido"].ToList()" CategoryProperty="Quarter" Title="Ejercido" ValueProperty="Revenue" Fill="#4caf50">
+                <RadzenSeriesDataLabels Visible="@showDataLabels"   />
+        </RadzenBarSeries>
+        <RadzenBarSeries Data="@ViewModel.TotalesDic["ingresos"].ToList()" CategoryProperty="Quarter" Title="Recaudo" ValueProperty="Revenue" Fill="#f44336">
+            <RadzenSeriesDataLabels Visible="@showDataLabels" />
+        </RadzenBarSeries>
+            <RadzenBarOptions Radius="5" Height="55" Margin="20" />
+            <RadzenValueAxis Formatter="@FormatAsUSD" >
+                <RadzenGridLines Visible="true"  />                    
+            </RadzenValueAxis>
                 
-            </RadzenChart>
-        </div>
-       
+        </RadzenChart>
+
     </div>
-    <style>
+
+        <Donut/>
+</div>
+
+<style>
     .rz-series-data-label {
-        fill: white !important;
+        fill: black !important;
     }
-
-    </style>
-
+</style>
+    
 @code {
+
+    [Inject]
+    private ComponentEvents componentEvents { set; get; }
+    private List<string> unidadestext = new();
+
+    private string EstateLoader{ set; get; }
+
 
     bool showDataLabels = true;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-
         if (firstRender)
         {
-
-
+            
         }
-    }
-    class DataItem
-    {
-        public virtual string? Quarter { get; set; }
-        public virtual double Revenue { get; set; }
     }
 
     string FormatAsUSD(object value)
     {
-        return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
+        return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("es-MX"));
     }
-    
-    DataItem[] revenue2019 = new DataItem[]
+
+    protected override void OnInitialized()
+    {        
+        componentEvents.EventoState(this, new ServiceTitle { State = "Presupuesto por Unidad Presupuestal" });
+        componentEvents.Eventos += EventHandler;
+    }
+    public void EventHandler(object sender, ServiceTitle serviceArg)
     {
-    new DataItem
+        unidadestext = serviceArg.TextUnidad;
+        StateHasChanged();
+    }
+    void BusyDialog()
     {
-        Quarter = "Sistema DIF",
-        Revenue = 238000
-    },
-    new DataItem
-    {
-        Quarter = "Junta de Asistencia",
-        Revenue = 284000
-    },
-    new DataItem
-    {
-        Quarter = "Hospital del niño",
-        Revenue = 274000
-    },
-    new DataItem
-    {
-        Quarter = "CRIH",
-        Revenue = 294000
-    },
-        new DataItem
-    {
-        Quarter = "Procuraduría",
-        Revenue = 291000
-    },
-    };
-    
-    DataItem[] revenue2020 = new DataItem[] {
-    new DataItem
-    {
-    Quarter = "Sistema DIF",
-    Revenue = 359000
-    },
-    new DataItem
-    {
-    Quarter = "Junta de Asistencia",
-    Revenue = 324000
-    },
-    new DataItem
-    {
-    Quarter = "Hospital del niño",
-    Revenue = 354000
-    },
-    new DataItem
-    {
-    Quarter = "CRIH",
-    Revenue = 394000
-    },
-        new DataItem
-    {
-        Quarter = "Procuraduría",
-        Revenue = 297000
-    },
-    };
-    
-    DataItem[] revenue2021 = new DataItem[]
-      {
-    new DataItem
-    {
-        Quarter = "Sistema DIF",
-        Revenue = 234000
-    },
-    new DataItem
-    {
-        Quarter = "Junta de Asistencia",
-        Revenue = 284000
-    },
-    new DataItem
-    {
-        Quarter = "Hospital del niño",
-        Revenue = 274000
-    },
-    new DataItem
-    {
-        Quarter = "CRIH",
-        Revenue = 294000
-    },
-        new DataItem
-    {
-        Quarter = "Procuraduría",
-        Revenue = 291000
-    },
-      };
-      
+        DialogService.Open("", ds =>
+    @<RadzenStack AlignItems="AlignItems.Center" Gap="2rem" Class="rz-p-12 rounded">
+        <RadzenText TextStyle="TextStyle.DisplayH6"> @EstateLoader</RadzenText>
+        <div class="loader"></div>
+    </RadzenStack>, new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto", CloseDialogOnEsc = false });
+    }
 }
 @*
 @if (false)
@@ -334,7 +268,7 @@ else
     // Busy dialog from string
    
 }
-
+*@
     <style>
         
 .loader {
@@ -363,9 +297,6 @@ else
    66%  {inset:-10px;transform: rotate(90deg)}
    100% {inset:0    ;transform: rotate(90deg)}
 }
-  .rz-series-data-label {
-        fill: white !important;
-    }
-    </style>
-
-    *@
+ 
+</style>
+    

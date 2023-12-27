@@ -1,5 +1,184 @@
 ﻿@page "/presupuesto/{rubro}"
 
+@using Radzen
+@using System.Globalization
+
+<div Class="rz-p-0 rz-p-md-12">
+    <RadzenStack Orientation="Radzen.Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" Class="rz-p-4 rz-mb-6 rz-border-radius-1" Style="border: var(--rz-grid-cell-border);">
+        <RadzenCheckBox @bind-Value="@smooth" Name="smooth"></RadzenCheckBox>
+        <RadzenLabel Text="Smooth" Component="smooth" Class="rz-mr-6" />
+        <RadzenCheckBox @bind-Value="@showDataLabels" Name="dataLabels"></RadzenCheckBox>
+        <RadzenLabel Text="Show Data Labels" Component="dataLabels" />
+    </RadzenStack>
+    <RadzenChart>
+        <RadzenStackedAreaSeries Smooth="@smooth" Data="@revenue2019" CategoryProperty="Date" Title="2019" ValueProperty="Revenue" RenderingOrder="1">
+            <RadzenSeriesDataLabels Visible="@showDataLabels"  OffsetX="-82"/>
+        </RadzenStackedAreaSeries>
+        <RadzenStackedAreaSeries Smooth="@smooth" Data="@revenue2020" CategoryProperty="Date" Title="2020" LineType="LineType.Dashed" ValueProperty="Revenue">
+            <RadzenSeriesDataLabels Visible="@showDataLabels"  OffsetX="-82"/>
+        </RadzenStackedAreaSeries>
+        <RadzenCategoryAxis Padding="20" Formatter="@FormatAsMonth" />
+        <RadzenValueAxis Formatter="@FormatAsUSD" Min="0" Max="800000" Step="100000">
+            <RadzenGridLines Visible="true" />
+            <RadzenAxisTitle Text="Revenue in USD" />
+        </RadzenValueAxis>
+    </RadzenChart>
+</div>
+
+@code {
+
+    [Parameter]
+    public string? rubro { set; get; }
+    bool smooth = true;
+    bool showDataLabels = false;
+    class DataItem
+    {
+        public string Date { get; set; }
+        public double Revenue { get; set; }
+    }
+
+    string FormatAsUSD(object value)
+    {
+        return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
+    }
+
+    string FormatAsMonth(object value)
+    {
+        if (value != null)
+        {
+            return Convert.ToDateTime(value).ToString("MMM");
+        }
+
+        return string.Empty;
+    }
+
+    DataItem[] revenue2019 = new DataItem[] {
+        new DataItem
+        {
+            Date = ("2019-01-01"),
+            Revenue = 234000
+        },
+        new DataItem
+        {
+            Date = ("2019-02-01"),
+            Revenue = 269000
+        },
+        new DataItem
+        {
+            Date = ("2019-03-01"),
+            Revenue = 233000
+        },
+        new DataItem
+        {
+            Date = ("2019-04-01"),
+            Revenue = 244000
+        },
+        new DataItem
+        {
+            Date = ("2019-05-01"),
+            Revenue = 214000
+        },
+        new DataItem
+        {
+            Date = ("2019-06-01"),
+            Revenue = 253000
+        },
+        new DataItem
+        {
+            Date = ("2019-07-01"),
+            Revenue = 274000
+        },
+        new DataItem
+        {
+            Date = ("2019-08-01"),
+            Revenue = 284000
+        },
+        new DataItem
+        {
+            Date = ("2019-09-01"),
+            Revenue = 273000
+        },
+        new DataItem
+        {
+            Date = ("2019-10-01"),
+            Revenue = 282000
+        },
+        new DataItem
+        {
+            Date = ("2019-11-01"),
+            Revenue = 289000
+        },
+        new DataItem
+        {
+            Date = ("2019-12-01"),
+            Revenue = 294000
+        }
+    };
+
+    DataItem[] revenue2020 = new DataItem[] {
+        new DataItem
+        {
+            Date = ("2019-01-01"),
+            Revenue = 334000
+        },
+        new DataItem
+        {
+            Date = ("2019-02-01"),
+            Revenue = 369000
+        },
+        new DataItem
+        {
+            Date = ("2019-03-01"),
+            Revenue = 333000
+        },
+        new DataItem
+        {
+            Date = ("2019-04-01"),
+            Revenue = 344000
+        },
+        new DataItem
+        {
+            Date = ("2019-05-01"),
+            Revenue = 314000
+        },
+        new DataItem
+        {
+            Date = ("2019-06-01"),
+            Revenue = 353000
+        },
+        new DataItem
+        {
+            Date = ("2019-07-01"),
+            Revenue = 374000
+        },
+        new DataItem
+        {
+            Date = ("2019-08-01"),
+            Revenue = 384000
+        },
+        new DataItem
+        {
+            Date = ("2019-09-01"),
+            Revenue = 373000
+        },
+        new DataItem
+        {
+            Date = ("2019-10-01"),
+            Revenue = 382000
+        },
+        new DataItem
+        {
+            Date = ("2019-11-01"),
+            Revenue = 389000
+        },
+        new DataItem
+        {
+            Date = ("2019-12-01"),
+            Revenue = 394000
+        }
+    };
+}
+@*
 @using Blazorise.Charts
 @using Blazorise.Charts.Trendline
 @using EstadisticaApp.DataAcces.Implement
@@ -16,17 +195,10 @@
    
     <Div Class="col-lg-10 col-md-12 col-sm-12 col-xs-12 pt-2 pe-2 mb-3">
       
-        <h4 class="ms-2">Presupuesto de @Rubross(rubro), por Mes </h4>
+        <h4 class="ms-2">Presupuesto de @ViewModel.RubroText(rubro), por Mes </h4>
         <Chart @ref="chart" TItem="double?" Type="ChartType.Line">
             <ChartTrendline @ref="chartTrendline" TItem="double?" />
         </Chart>
-
-        @*Prubas de Manometro*@
-
-        
-
-   
-       
     </Div>
 
     <Div Class="col-lg-2 col-md-12 col-sm-12 col-xs-12 px-auto mb-3 mt-2" Style="overflow-y:auto;box-shadow: 0px -12px 11px -6px rgba(0,0,0,0.2);">
@@ -48,11 +220,8 @@
 
 @code {
 
-
-
     [Parameter]
     public string? rubro{ set; get; }
-
 
     private UnidadesMes recaudo = new UnidadesMes();
 
@@ -60,11 +229,8 @@
     ChartTrendline<double?> chartTrendline;
 
     //Toma los parametros para observarlos
-    public override Task SetParametersAsync(ParameterView parameters)
-    {
-
-        return base.SetParametersAsync(parameters);
-    }
+    public override Task SetParametersAsync(ParameterView parameters)=>base.SetParametersAsync(parameters);
+    
 
     //Ejecuta un renderizado cada que recibe parametros nuevos
     protected async override Task OnParametersSetAsync()
@@ -87,15 +253,13 @@
         await ViewModel.unidadMes(rubro);
         if (chart != null) {
             await chart.Clear();
-            await chart.AddLabels(ViewModel.Meses);
+            await chart.AddLabels(await ViewModel.meses());
 
             await chart.AddDataSet( GetLineChartDataset("imp_Modificado"));
             await chart.AddDataSet(GetLineChartDataset("Imp_Comp_Dev_Eje_Pagado"));
 
             //Pide la clave de rubro
             await chart.AddDataSet(await GetLineChartIngresos(rubro));
-
-
             await chart.Update();
         }
 
@@ -137,22 +301,11 @@
     List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
     List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };
 
-    public string Rubross(string? ru)
-    {
-        Dictionary<string,string> liss = new Dictionary<string, string>
-        {
-            {"01","Sistema DIF"},
-            {"02","Junta de Asistencía" },
-            {"03","Hospital del niño" },
-            {"04","CRIH" },
-            {"05","Procuraduría" }
-        };
-        return liss[ru];
-    }
+   
 
 } 
 
 
 
 
-    
+  *@  

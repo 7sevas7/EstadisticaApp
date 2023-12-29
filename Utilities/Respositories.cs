@@ -1,6 +1,6 @@
 ﻿
 using EstadisticaApp.Components.Pages;
-using EstadisticaApp.DataAcces.Implement;
+
 using EstadisticaApp.DataAcces.Interfaces;
 using EstadisticaApp.ViewModels;
 

@@ -1,8 +1,4 @@
-﻿
-
-
-using EstadisticaApp.DataAcces.Implement;
-using EstadisticaApp.DataAcces.Interfaces;
+﻿using EstadisticaApp.DataAcces.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace EstadisticaApp.Models

@@ -20,6 +20,8 @@ namespace EstadisticaApp
             var dbContext = new DBContext();
             dbContext.Database.EnsureCreatedAsync().Wait();
             dbContext.Dispose();
+
+
             builder.Services.AddDbContext<DBContext>();
             builder.Services.AddScoped<DBContext>();
             //Service title
